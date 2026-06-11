@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Block direct access to sensitive media files unless referred from this site
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?yourdomain\.com/ [NC]
+RewriteRule \.(jpg|png|mov|mp4|pdf)$ - [F,NC]
+
+# SPA fallback (keep existing)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
