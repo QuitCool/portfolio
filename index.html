@@ -59,7 +59,7 @@
         .mobile-menu {
             display: none;
             position: fixed;
-            top: 72px;                /* same as header height (padding + border) */
+            top: 72px;
             left: 0;
             width: 100%;
             background: var(--paper);
@@ -105,16 +105,16 @@
         /* ── RESPONSIVE BEHAVIOUR ──────────────────────────── */
         @media (max-width: 900px) {
             .nav-right {
-                margin-left: auto;   /* push to right only on mobile */
+                margin-left: auto;
             }
             .hamburger {
                 display: flex;
             }
             .mobile-menu {
-                display: block;        /* still hidden via opacity/transform until .open is added */
+                display: block;
             }
             .nav-links {
-                display: none !important;   /* hide the desktop inline menu */
+                display: none !important;
             }
             .hero {
                 grid-template-columns: 1fr;
@@ -155,15 +155,13 @@
                 display: none;
             }
 
-            /* Hide desktop links, show hamburger */
             .nav-links {
                 display: none !important;
             }
             .hamburger {
-                display: flex;            /* override the default display:none */
+                display: flex;
             }
 
-            /* Hide custom cursor on mobile */
             html.js body {
                 cursor: auto;
             }
@@ -172,7 +170,6 @@
             }
         }
 
-        /* Fix: remove cursor:none on mobile for touch targets */
         @media (max-width: 900px) {
             html.js body {
                 cursor: auto;
@@ -181,7 +178,6 @@
                 display: none !important;
             }
         }
-        /* Make project numbers 01 and 02 always light, even in dark mode */
         .proj-card.light-num .proj-num {
             color: rgba(255, 255, 255, 0.85) !important;
         }
@@ -467,7 +463,6 @@
             min-width:0;
         }
 
-        /* ── YouTube thumbnail preview ─────────────────────────────── */
         .proj-thumb{
             position:relative;width:100%;aspect-ratio:16/9;
             overflow:hidden;background:var(--paper2);flex-shrink:0;
@@ -646,7 +641,7 @@
         #dm-toggle .dm-icon{font-size:13px;line-height:1}
         #dm-icon-el svg { display:block; }
 
-        /* ── VIDEO MODAL (YouTube iframe) ─────────────────────────────── */
+        /* ── VIDEO MODAL ─────────────────────────────── */
         #video-modal{
             display:none;position:fixed;inset:0;z-index:2000;
             background:rgba(0,0,0,.95);
@@ -665,11 +660,9 @@
         }
         #video-modal-title{font-size:12px;letter-spacing:.1em;color:#aaa;font-family:var(--mono)}
 
-        /* YouTube iframe container — responsive 16:9 */
         #yt-embed-wrap {
             position: relative;
             width: 100%;
-            /* 16:9 aspect ratio — max height capped so it never overflows screen */
             padding-top: min(56.25%, calc(100vh - 120px));
             background: #000;
             overflow: hidden;
@@ -679,20 +672,18 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             border: none;
-            /* block right-click context menu on iframe edges */
             pointer-events: auto;
         }
 
-        /* Invisible overlay to block right-click / download attempts on the iframe */
         #yt-overlay {
             position: absolute;
             inset: 0;
             z-index: 1;
             background: transparent;
-            pointer-events: none; /* allows normal YT controls */
+            pointer-events: none;
         }
 
-        /* image/PDF lightbox */
+        /* ── IMAGE LIGHTBOX ─────────────────────────────────────────── */
         #img-modal{
             display:none;position:fixed;inset:0;z-index:2000;
             background:rgba(0,0,0,.92);
@@ -703,25 +694,94 @@
         #img-modal-inner{
             position:relative;width:100%;max-width:90vw;
             background:#0d0d0d;border:1px solid #2a2a2a;
+            display:flex;flex-direction:column;
+            max-height:92vh;
         }
         #img-modal-bar{
             display:flex;align-items:center;justify-content:space-between;
             padding:.75rem 1.25rem;border-bottom:1px solid #1e1e1e;
+            flex-shrink:0;
         }
         #img-modal-title{font-size:12px;letter-spacing:.1em;color:#aaa;font-family:var(--mono)}
-        #img-modal-content{
+
+        /* ── ZOOM TOOLBAR ─────────────────────────────────────────── */
+        #img-zoom-bar{
+            display:flex;align-items:center;gap:8px;
+            padding:.55rem 1.25rem;
+            border-bottom:1px solid #1e1e1e;
+            background:#0a0a0a;
+            flex-shrink:0;
+        }
+        .zoom-btn{
+            background:rgba(255,255,255,0.08);
+            border:1px solid rgba(255,255,255,0.12);
+            color:#ccc;
+            cursor:pointer;
+            width:30px;height:30px;
             display:flex;align-items:center;justify-content:center;
-            max-height:80vh;overflow:auto;
+            border-radius:4px;
+            font-size:16px;font-weight:300;
+            line-height:1;
+            transition:background .2s,color .2s,border-color .2s;
+            flex-shrink:0;
+            user-select:none;
+        }
+        .zoom-btn:hover{background:rgba(200,64,26,.6);border-color:rgba(200,64,26,.8);color:#fff}
+        .zoom-btn:active{transform:scale(0.93)}
+        #zoom-level-display{
+            font-size:11px;font-family:var(--mono);
+            color:#888;letter-spacing:.08em;
+            min-width:42px;text-align:center;
+        }
+        #zoom-fit-btn{
+            font-size:10px;letter-spacing:.08em;padding:0 10px;
+            width:auto;font-family:var(--mono);
+        }
+        .zoom-divider{
+            width:1px;height:16px;
+            background:rgba(255,255,255,0.1);
+            flex-shrink:0;
+        }
+        /* hint text */
+        #zoom-hint{
+            font-size:10px;color:#555;letter-spacing:.06em;
+            margin-left:auto;font-family:var(--mono);
+        }
+        @media(max-width:600px){#zoom-hint{display:none}}
+
+        /* ── IMAGE VIEWPORT ───────────────────────────────────────── */
+        #img-modal-viewport{
+            overflow:hidden;
+            flex:1;
+            min-height:0;
+            cursor:grab;
+            position:relative;
             background:#111;
         }
+        #img-modal-viewport.grabbing{ cursor:grabbing; }
+        #img-modal-canvas{
+            display:flex;align-items:center;justify-content:center;
+            width:100%;height:100%;
+            position:relative;
+        }
+        #img-modal-content{
+            display:flex;align-items:center;justify-content:center;
+            transform-origin:center center;
+            transition:transform .22s cubic-bezier(0.25,0.46,0.45,0.94);
+            will-change:transform;
+        }
         #img-modal-content img{
-            max-width:100%;max-height:90vh;
-            display:block;object-fit:contain;
-            -webkit-user-drag:none;user-select:none;pointer-events:none;
+            max-width:none;
+            display:block;
+            -webkit-user-drag:none;
+            user-select:none;
+            pointer-events:none;
+            border:none;
+            outline:none;
         }
         #img-modal-content iframe,
         #img-modal-content object{
-            width:100%;height:80vh;border:none;
+            width:80vw;height:75vh;border:none;
         }
     </style>
 </head>
@@ -934,7 +994,6 @@
         <h2 class="section-title reveal">Featured <em>Projects</em></h2>
         <div class="projects-grid">
 
-            <!-- Each card: data-ytid = YouTube video ID -->
             <div class="proj-card reveal light-num" data-ytid="4I8moppdZRg" data-slug="Agentic-Repo">
                 <div class="proj-thumb-yt">
                     <img src="https://i.ytimg.com/vi/4I8moppdZRg/hqdefault.jpg" alt="Agentic Repo preview" draggable="false" loading="lazy" />
@@ -1286,19 +1345,19 @@
                 </button>
                 <span id="video-modal-title">Project Demo</span>
             </div>
-            <!-- YouTube iframe injected here dynamically -->
             <div id="yt-embed-wrap">
                 <div id="yt-overlay"></div>
-                <!-- iframe injected by JS -->
             </div>
         </div>
     </div>
 
-    <!-- IMAGE LIGHTBOX -->
+    <!-- IMAGE LIGHTBOX (with zoom) -->
     <div id="img-modal">
         <div id="img-modal-inner">
+
+            <!-- Top bar: close + title -->
             <div id="img-modal-bar">
-                <button id="img-modal-close">
+                <button id="img-modal-close" title="Close (Esc)">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -1306,111 +1365,105 @@
                 </button>
                 <span id="img-modal-title">Certificate</span>
             </div>
-            <div id="img-modal-content"></div>
+
+            <!-- Zoom toolbar -->
+            <div id="img-zoom-bar">
+                <button class="zoom-btn" id="zoom-out-btn" title="Zoom out (-)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/>
+                    </svg>
+                </button>
+                <span id="zoom-level-display">100%</span>
+                <button class="zoom-btn" id="zoom-in-btn" title="Zoom in (+)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+                    </svg>
+                </button>
+                <div class="zoom-divider"></div>
+                <button class="zoom-btn" id="zoom-fit-btn" title="Reset to fit">Fit</button>
+                <button class="zoom-btn" id="zoom-100-btn" title="Reset to 100%">1:1</button>
+                <span id="zoom-hint">scroll to zoom · drag to pan</span>
+            </div>
+
+            <!-- Pannable / zoomable viewport -->
+            <div id="img-modal-viewport">
+                <div id="img-modal-canvas">
+                    <div id="img-modal-content"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // ── MOBILE MENU TOGGLE ─────────────────────────────────
+        /* ── MOBILE MENU ──────────────────────────────────────────── */
         (function() {
             const hamburger = document.querySelector('.hamburger');
             const mobileMenu = document.querySelector('.mobile-menu');
             const mobileLinks = mobileMenu.querySelectorAll('a');
-
             if (!hamburger || !mobileMenu) return;
-
             function openMenu() {
                 hamburger.classList.add('active');
                 hamburger.setAttribute('aria-expanded', 'true');
                 mobileMenu.classList.add('open');
-                document.body.style.overflow = 'hidden';   // prevent scroll behind menu
+                document.body.style.overflow = 'hidden';
             }
-
             function closeMenu() {
                 hamburger.classList.remove('active');
                 hamburger.setAttribute('aria-expanded', 'false');
                 mobileMenu.classList.remove('open');
                 document.body.style.overflow = '';
             }
-
-            hamburger.addEventListener('click', () => {
-                if (mobileMenu.classList.contains('open')) {
-                    closeMenu();
-                } else {
-                    openMenu();
-                }
-            });
-
-            // Close menu when a link is clicked
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    closeMenu();
-                });
-            });
-
-            // Optional: close menu on pressing Escape
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
-                    closeMenu();
-                }
-            });
-
-            // Close menu when clicking outside (on the page content)
-            document.addEventListener('click', (e) => {
-                const target = e.target;
-                // If menu is open and click is not inside nav or on hamburger
-                if (mobileMenu.classList.contains('open') &&
-                    !target.closest('nav') &&
-                    !target.closest('.mobile-menu')) {
-                    closeMenu();
-                }
+            hamburger.addEventListener('click', () => mobileMenu.classList.contains('open') ? closeMenu() : openMenu());
+            mobileLinks.forEach(l => l.addEventListener('click', closeMenu));
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+            document.addEventListener('click', e => {
+                if (mobileMenu.classList.contains('open') && !e.target.closest('nav') && !e.target.closest('.mobile-menu')) closeMenu();
             });
         })();
-        // ── GRACEFUL DEGRADATION ──────────────────────────────────────────
+
         document.documentElement.classList.add('js');
-
-        // ── RIGHT CLICK BLOCK ─────────────────────────────────────────────
         document.addEventListener('contextmenu', e => e.preventDefault());
-
-        // ── KEYBOARD SHORTCUT BLOCKING ────────────────────────────────────
         document.addEventListener('keydown', function(e) {
             if (
-                (e.ctrlKey && (e.key === 's' || e.key === 'S' || e.key === 'u' || e.key === 'U')) ||
-                (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I' || e.key === 'j' || e.key === 'J' || e.key === 'c' || e.key === 'C')) ||
-                (e.key === 'F12') ||
-                (e.metaKey && (e.key === 's' || e.key === 'S' || e.key === 'u' || e.key === 'U')) ||
-                (e.metaKey && e.shiftKey && (e.key === 'i' || e.key === 'I' || e.key === 'j' || e.key === 'J' || e.key === 'c' || e.key === 'C'))
-            ) {
-                e.preventDefault();
-                return false;
+                (e.ctrlKey && (e.key === 's'||e.key==='S'||e.key==='u'||e.key==='U')) ||
+                (e.ctrlKey && e.shiftKey && (e.key==='i'||e.key==='I'||e.key==='j'||e.key==='J'||e.key==='c'||e.key==='C')) ||
+                e.key==='F12' ||
+                (e.metaKey && (e.key==='s'||e.key==='S'||e.key==='u'||e.key==='U')) ||
+                (e.metaKey && e.shiftKey && (e.key==='i'||e.key==='I'||e.key==='j'||e.key==='J'||e.key==='c'||e.key==='C'))
+            ) { e.preventDefault(); return false; }
+
+            /* Keyboard zoom inside lightbox */
+            if (imgModal && imgModal.classList.contains('open')) {
+                if (e.key === '=' || e.key === '+') { e.preventDefault(); zoomBy(0.15); }
+                if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomBy(-0.15); }
+                if (e.key === '0') { e.preventDefault(); zoomReset(); }
+                if (e.key === '1') { e.preventDefault(); zoom100(); }
+                if (e.key === 'Escape') { closeImg(); return; }
             }
             if (e.key === 'Escape') {
                 if (videoModal && videoModal.classList.contains('open')) closeVideo();
-                if (imgModal && imgModal.classList.contains('open')) closeImg();
             }
         });
 
-        // ── CUSTOM CURSOR ─────────────────────────────────────────────────
+        /* ── CUSTOM CURSOR ───────────────────────────────────────── */
         const cur = document.getElementById('cursor');
         if (cur) {
-            document.addEventListener('mousemove', e => {
-                cur.style.left = e.clientX + 'px';
-                cur.style.top  = e.clientY + 'px';
-            });
+            document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
             document.querySelectorAll('a,button,.proj-card,.num-cell,.cert-card').forEach(el => {
                 el.addEventListener('mouseenter', () => { cur.style.width='20px'; cur.style.height='20px'; });
                 el.addEventListener('mouseleave', () => { cur.style.width='10px'; cur.style.height='10px'; });
             });
         }
 
-        // ── SCROLL REVEAL ─────────────────────────────────────────────────
+        /* ── SCROLL REVEAL ───────────────────────────────────────── */
         const obs = new IntersectionObserver(entries => {
             entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-        }, { threshold: .1 });
+        }, { threshold:.1 });
         document.querySelectorAll('.reveal,.reveal-left').forEach(el => obs.observe(el));
 
-        // ── DARK MODE TOGGLE ──────────────────────────────────────────────
-        const dmBtn  = document.getElementById('dm-toggle');
+        /* ── DARK MODE ───────────────────────────────────────────── */
+        const dmBtn = document.getElementById('dm-toggle');
         const dmText = document.getElementById('dm-text');
         function setDark(on) {
             document.body.classList.toggle('dark', on);
@@ -1425,139 +1478,320 @@
         }
         if (dmBtn) dmBtn.addEventListener('click', () => setDark(!document.body.classList.contains('dark')));
         (function() {
-            try {
-                const saved = localStorage.getItem('dm');
-                setDark(saved === '0' ? false : true);
-            } catch(e) { setDark(true); }
+            try { const s = localStorage.getItem('dm'); setDark(s === '0' ? false : true); }
+            catch(e) { setDark(true); }
         })();
 
-        // ── VIDEO MODAL (YouTube) ─────────────────────────────────────────
-        const videoModal  = document.getElementById('video-modal');
-        const ytWrap      = document.getElementById('yt-embed-wrap');
-        const videoTitle  = document.getElementById('video-modal-title');
-        const videoClose  = document.getElementById('video-modal-close');
+        /* ── VIDEO MODAL ─────────────────────────────────────────── */
+        const videoModal = document.getElementById('video-modal');
+        const ytWrap = document.getElementById('yt-embed-wrap');
+        const videoTitle = document.getElementById('video-modal-title');
+        const videoClose = document.getElementById('video-modal-close');
 
-        /**
-         * Build a YouTube embed URL with:
-         *  autoplay=1          – starts immediately
-         *  rel=0               – no related-video suggestions from other channels
-         *  modestbranding=1    – minimal YouTube logo
-         *  fs=1                – fullscreen button allowed
-         *  disablekb=0         – keyboard shortcuts work (spacebar pause etc.)
-         *  iv_load_policy=3    – no video annotations
-         *  cc_load_policy=0    – no forced captions
-         *  origin=<host>       – security / no-lag handshake
-         *
-         * Download is controlled by YouTube's own platform policies;
-         * the embed URL itself has no download button — that only appears
-         * on youtube.com watch pages.
-         */
         function ytEmbedUrl(ytid) {
             const origin = encodeURIComponent(window.location.origin || 'https://mohsenhajjaj.com');
-            return `https://www.youtube-nocookie.com/embed/${ytid}` +
-                   `?autoplay=1&rel=0&modestbranding=1&fs=1` +
-                   `&iv_load_policy=3&cc_load_policy=0&origin=${origin}`;
+            return `https://www.youtube-nocookie.com/embed/${ytid}?autoplay=1&rel=0&modestbranding=1&fs=1&iv_load_policy=3&cc_load_policy=0&origin=${origin}`;
         }
-
         function requestFullscreen(el) {
-            if      (el.requestFullscreen)       return el.requestFullscreen();
-            else if (el.webkitRequestFullscreen)  return el.webkitRequestFullscreen();
-            else if (el.mozRequestFullScreen)     return el.mozRequestFullScreen();
-            else if (el.msRequestFullscreen)      return el.msRequestFullscreen();
+            if (el.requestFullscreen) return el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+            else if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
+            else if (el.msRequestFullscreen) return el.msRequestFullscreen();
         }
-
         function exitFullscreen() {
-            if      (document.exitFullscreen)       return document.exitFullscreen();
+            if (document.exitFullscreen) return document.exitFullscreen();
             else if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
-            else if (document.mozCancelFullScreen)  return document.mozCancelFullScreen();
-            else if (document.msExitFullscreen)     return document.msExitFullscreen();
+            else if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
+            else if (document.msExitFullscreen) return document.msExitFullscreen();
         }
-
         function isFullscreen() {
-            return !!(document.fullscreenElement ||
-                      document.webkitFullscreenElement ||
-                      document.mozFullScreenElement ||
-                      document.msFullscreenElement);
+            return !!(document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement);
         }
-
         function openVideo(ytid, title) {
             if (!videoModal || !ytWrap) return;
             videoTitle.textContent = title || 'Project Demo';
-
-            // Remove any previous iframe
             const old = ytWrap.querySelector('iframe');
             if (old) old.remove();
-
-            // Create fresh iframe
             const iframe = document.createElement('iframe');
-            iframe.setAttribute('allowfullscreen', '');
-            iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
-            iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+            iframe.setAttribute('allowfullscreen','');
+            iframe.setAttribute('allow','autoplay; fullscreen; encrypted-media; picture-in-picture');
+            iframe.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
             iframe.setAttribute('title', title || 'Project Demo');
-            iframe.setAttribute('loading', 'eager');
+            iframe.setAttribute('loading','eager');
             iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;';
-
             ytWrap.appendChild(iframe);
-
             videoModal.classList.add('open');
             document.body.style.overflow = 'hidden';
-
-            // Set src AFTER appending — fastest start
             iframe.src = ytEmbedUrl(ytid);
-
-            // Request fullscreen on the iframe element (gives true OS-level fullscreen)
-            // Small delay lets the browser register the user gesture chain
             setTimeout(() => {
-                requestFullscreen(iframe).catch(() => {
-                    // Fallback: fullscreen the modal wrapper instead
-                    requestFullscreen(videoModal).catch(() => {});
-                });
+                requestFullscreen(iframe).catch(() => requestFullscreen(videoModal).catch(() => {}));
             }, 80);
         }
-
         function closeVideo() {
             if (!videoModal) return;
-            // Exit fullscreen first if active
             if (isFullscreen()) exitFullscreen();
             videoModal.classList.remove('open');
             document.body.style.overflow = '';
-            // Destroy iframe so audio/video stops completely
             const iframe = ytWrap ? ytWrap.querySelector('iframe') : null;
             if (iframe) iframe.remove();
         }
-
-        // When user presses Esc or exits fullscreen via browser UI, also close the modal
-        document.addEventListener('fullscreenchange',       onFsChange);
+        document.addEventListener('fullscreenchange', onFsChange);
         document.addEventListener('webkitfullscreenchange', onFsChange);
-        document.addEventListener('mozfullscreenchange',    onFsChange);
-        document.addEventListener('MSFullscreenChange',     onFsChange);
+        document.addEventListener('mozfullscreenchange', onFsChange);
+        document.addEventListener('MSFullscreenChange', onFsChange);
         function onFsChange() {
             if (!isFullscreen() && videoModal && videoModal.classList.contains('open')) {
                 videoModal.classList.remove('open');
                 document.body.style.overflow = '';
                 const iframe = ytWrap ? ytWrap.querySelector('iframe') : null;
                 if (iframe) iframe.remove();
-                // No URL change
+            }
+        }
+        if (videoClose) videoClose.addEventListener('click', closeVideo);
+        if (videoModal) videoModal.addEventListener('click', e => { if (e.target === videoModal) closeVideo(); });
+
+        /* ── IMAGE LIGHTBOX WITH ZOOM & PAN ──────────────────────── */
+        const imgModal      = document.getElementById('img-modal');
+        const imgTitle      = document.getElementById('img-modal-title');
+        const imgContent    = document.getElementById('img-modal-content');
+        const imgClose      = document.getElementById('img-modal-close');
+        const imgViewport   = document.getElementById('img-modal-viewport');
+        const zoomDisplay   = document.getElementById('zoom-level-display');
+        const zoomInBtn     = document.getElementById('zoom-in-btn');
+        const zoomOutBtn    = document.getElementById('zoom-out-btn');
+        const zoomFitBtn    = document.getElementById('zoom-fit-btn');
+        const zoom100Btn    = document.getElementById('zoom-100-btn');
+
+        const ZOOM_MIN = 0.2;
+        const ZOOM_MAX = 8;
+        const ZOOM_STEP = 0.2;
+
+        let currentZoom = 1;
+        let panX = 0, panY = 0;
+        let isDragging = false;
+        let dragStartX = 0, dragStartY = 0;
+        let dragOriginX = 0, dragOriginY = 0;
+        let naturalW = 0, naturalH = 0;
+        let fitZoom = 1;
+
+        function updateTransform(animate) {
+            if (!imgContent) return;
+            if (!animate) imgContent.style.transition = 'none';
+            imgContent.style.transform = `translate(${panX}px, ${panY}px) scale(${currentZoom})`;
+            if (!animate) requestAnimationFrame(() => { imgContent.style.transition = ''; });
+            updateZoomDisplay();
+        }
+
+        function updateZoomDisplay() {
+            if (zoomDisplay) zoomDisplay.textContent = Math.round(currentZoom * 100) + '%';
+        }
+
+        function clampPan() {
+            if (!imgViewport || !imgContent) return;
+            const vw = imgViewport.clientWidth;
+            const vh = imgViewport.clientHeight;
+            const scaledW = naturalW * currentZoom;
+            const scaledH = naturalH * currentZoom;
+
+            if (scaledW <= vw) {
+                panX = 0;
+            } else {
+                const maxPan = (scaledW - vw) / 2;
+                panX = Math.max(-maxPan, Math.min(maxPan, panX));
+            }
+            if (scaledH <= vh) {
+                panY = 0;
+            } else {
+                const maxPan = (scaledH - vh) / 2;
+                panY = Math.max(-maxPan, Math.min(maxPan, panY));
             }
         }
 
-        if (videoClose)  videoClose.addEventListener('click', closeVideo);
-        if (videoModal)  videoModal.addEventListener('click', e => { if (e.target === videoModal) closeVideo(); });
+        function calcFitZoom() {
+            if (!imgViewport || !naturalW || !naturalH) return 1;
+            const vw = imgViewport.clientWidth;
+            const vh = imgViewport.clientHeight;
+            const pad = 24;
+            return Math.min((vw - pad) / naturalW, (vh - pad) / naturalH, 1);
+        }
 
-        // ── IMAGE LIGHTBOX ────────────────────────────────────────────────
-        const imgModal   = document.getElementById('img-modal');
-        const imgTitle   = document.getElementById('img-modal-title');
-        const imgContent = document.getElementById('img-modal-content');
-        const imgClose   = document.getElementById('img-modal-close');
+        function zoomTo(newZoom, pivotX, pivotY) {
+            newZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, newZoom));
+            if (!imgViewport) { currentZoom = newZoom; updateTransform(true); return; }
+            const vw = imgViewport.clientWidth;
+            const vh = imgViewport.clientHeight;
+            const cx = pivotX !== undefined ? pivotX : vw / 2;
+            const cy = pivotY !== undefined ? pivotY : vh / 2;
+            const ratio = newZoom / currentZoom;
+            panX = cx - ratio * (cx - panX);
+            panY = cy - ratio * (cy - panY);
+            currentZoom = newZoom;
+            clampPan();
+            updateTransform(true);
+        }
+
+        function zoomBy(delta) { zoomTo(currentZoom + delta); }
+
+        function zoomReset() {
+            fitZoom = calcFitZoom();
+            currentZoom = fitZoom;
+            panX = 0; panY = 0;
+            updateTransform(true);
+        }
+
+        function zoom100() {
+            panX = 0; panY = 0;
+            currentZoom = 1;
+            updateTransform(true);
+        }
+
+        /* Wheel zoom */
+        if (imgViewport) {
+            imgViewport.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const rect = imgViewport.getBoundingClientRect();
+                const px = e.clientX - rect.left;
+                const py = e.clientY - rect.top;
+                const delta = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
+                zoomTo(currentZoom + delta, px, py);
+            }, { passive: false });
+
+            /* Mouse drag pan */
+            imgViewport.addEventListener('mousedown', function(e) {
+                if (e.button !== 0) return;
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                dragOriginX = panX;
+                dragOriginY = panY;
+                imgViewport.classList.add('grabbing');
+                e.preventDefault();
+            });
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                panX = dragOriginX + (e.clientX - dragStartX);
+                panY = dragOriginY + (e.clientY - dragStartY);
+                clampPan();
+                updateTransform(false);
+            });
+            document.addEventListener('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    imgViewport.classList.remove('grabbing');
+                }
+            });
+
+            /* Touch pinch zoom + drag */
+            let touches = [];
+            let lastDist = 0;
+            let lastMidX = 0, lastMidY = 0;
+            let touchOriginPanX = 0, touchOriginPanY = 0;
+
+            imgViewport.addEventListener('touchstart', function(e) {
+                touches = Array.from(e.touches);
+                if (touches.length === 1) {
+                    dragStartX = touches[0].clientX;
+                    dragStartY = touches[0].clientY;
+                    dragOriginX = panX;
+                    dragOriginY = panY;
+                    isDragging = true;
+                } else if (touches.length === 2) {
+                    isDragging = false;
+                    const dx = touches[1].clientX - touches[0].clientX;
+                    const dy = touches[1].clientY - touches[0].clientY;
+                    lastDist = Math.sqrt(dx*dx + dy*dy);
+                    const rect = imgViewport.getBoundingClientRect();
+                    lastMidX = ((touches[0].clientX + touches[1].clientX) / 2) - rect.left;
+                    lastMidY = ((touches[0].clientY + touches[1].clientY) / 2) - rect.top;
+                    touchOriginPanX = panX;
+                    touchOriginPanY = panY;
+                }
+                e.preventDefault();
+            }, { passive: false });
+
+            imgViewport.addEventListener('touchmove', function(e) {
+                touches = Array.from(e.touches);
+                if (touches.length === 1 && isDragging) {
+                    panX = dragOriginX + (touches[0].clientX - dragStartX);
+                    panY = dragOriginY + (touches[0].clientY - dragStartY);
+                    clampPan();
+                    updateTransform(false);
+                } else if (touches.length === 2) {
+                    const dx = touches[1].clientX - touches[0].clientX;
+                    const dy = touches[1].clientY - touches[0].clientY;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    const rect = imgViewport.getBoundingClientRect();
+                    const midX = ((touches[0].clientX + touches[1].clientX) / 2) - rect.left;
+                    const midY = ((touches[0].clientY + touches[1].clientY) / 2) - rect.top;
+                    if (lastDist > 0) {
+                        const ratio = dist / lastDist;
+                        const newZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, currentZoom * ratio));
+                        const zoomRatio = newZoom / currentZoom;
+                        panX = midX - zoomRatio * (midX - panX);
+                        panY = midY - zoomRatio * (midY - panY);
+                        currentZoom = newZoom;
+                        clampPan();
+                        updateTransform(false);
+                    }
+                    lastDist = dist;
+                    lastMidX = midX;
+                    lastMidY = midY;
+                }
+                e.preventDefault();
+            }, { passive: false });
+
+            imgViewport.addEventListener('touchend', function(e) {
+                if (e.touches.length === 0) { isDragging = false; lastDist = 0; }
+                if (e.touches.length === 1) {
+                    touches = Array.from(e.touches);
+                    dragStartX = touches[0].clientX;
+                    dragStartY = touches[0].clientY;
+                    dragOriginX = panX;
+                    dragOriginY = panY;
+                    isDragging = true;
+                    lastDist = 0;
+                }
+            });
+        }
+
+        /* Zoom buttons */
+        if (zoomInBtn)  zoomInBtn.addEventListener('click',  () => zoomBy(ZOOM_STEP));
+        if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => zoomBy(-ZOOM_STEP));
+        if (zoomFitBtn) zoomFitBtn.addEventListener('click', zoomReset);
+        if (zoom100Btn) zoom100Btn.addEventListener('click', zoom100);
 
         function openImg(src, title, isPdf) {
             if (!imgModal || !imgContent) return;
             imgTitle.textContent = title || 'Certificate';
+            imgContent.innerHTML = '';
+            currentZoom = 1; panX = 0; panY = 0;
+            updateTransform(false);
+
             if (isPdf) {
-                imgContent.innerHTML = `<iframe src="${src}#view=fit" type="application/pdf" oncontextmenu="return false;" style="width:100%;height:80vh;border:none;"></iframe>`;
+                naturalW = 800; naturalH = 600;
+                imgContent.innerHTML = `<iframe src="${src}#view=fit" type="application/pdf" oncontextmenu="return false;" style="width:80vw;height:72vh;border:none;"></iframe>`;
+                fitZoom = 1;
             } else {
-                imgContent.innerHTML = `<img src="${src}" alt="${title}" draggable="false" oncontextmenu="return false;" style="max-width:100%;max-height:90vh;display:block;object-fit:contain;-webkit-user-drag:none;user-select:none;pointer-events:none;">`;
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = title || '';
+                img.draggable = false;
+                img.setAttribute('oncontextmenu', 'return false;');
+
+                img.addEventListener('load', function() {
+                    naturalW = img.naturalWidth;
+                    naturalH = img.naturalHeight;
+                    /* Set explicit pixel size so transform-origin works correctly */
+                    img.style.width  = naturalW + 'px';
+                    img.style.height = naturalH + 'px';
+                    fitZoom = calcFitZoom();
+                    currentZoom = fitZoom;
+                    panX = 0; panY = 0;
+                    updateTransform(false);
+                });
+                imgContent.appendChild(img);
             }
+
             imgModal.classList.add('open');
             document.body.style.overflow = 'hidden';
         }
@@ -1567,12 +1801,13 @@
             imgModal.classList.remove('open');
             imgContent.innerHTML = '';
             document.body.style.overflow = '';
+            currentZoom = 1; panX = 0; panY = 0;
         }
 
-        if (imgClose)  imgClose.addEventListener('click', closeImg);
-        if (imgModal)  imgModal.addEventListener('click', e => { if (e.target === imgModal) closeImg(); });
+        if (imgClose) imgClose.addEventListener('click', closeImg);
+        if (imgModal) imgModal.addEventListener('click', e => { if (e.target === imgModal) closeImg(); });
 
-        // ── CLICK HANDLERS ────────────────────────────────────────────────
+        /* ── CLICK HANDLERS ──────────────────────────────────────── */
         document.querySelectorAll('.proj-card[data-slug]').forEach(card => {
             card.addEventListener('click', function() {
                 const ytid  = this.dataset.ytid;
@@ -1589,13 +1824,6 @@
             });
         });
 
-        // Override close buttons to also reset URL
-        const _origCloseVideo = closeVideo;
-        const _origCloseImg   = closeImg;
-        // (already wired above — URL reset happens inside closeVideo/closeImg
-        //  because popstate handles the rest. No need to double-wrap.)
-
-        // Disable image drag
         document.querySelectorAll('img').forEach(img => {
             img.setAttribute('draggable','false');
             img.addEventListener('dragstart', e => e.preventDefault());
