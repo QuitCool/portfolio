@@ -1431,27 +1431,6 @@
             } catch(e) { setDark(true); }
         })();
 
-        // ── MEDIA MAP (slug → YouTube ID or image file) ───────────────────
-        const mediaMap = {
-            'Agentic-Repo':          { type: 'youtube', ytid: '4I8moppdZRg' },
-            'Delta-Code-Extension':  { type: 'youtube', ytid: '_Oui2QCE1AA' },
-            'Qiblah':                { type: 'youtube', ytid: 'Yr9lzb4icKs' },
-            'Pharma-System':         { type: 'youtube', ytid: 'EF7mxWe0CMw' },
-            'Project-Management':    { type: 'youtube', ytid: 'wYfMSxCavbA' },
-            'Medibroker':            { type: 'youtube', ytid: 'Uoeg_rkyXNU' },
-            'Diziel-App':            { type: 'youtube', ytid: 'yE_dYYwq3rM' },
-
-            'IBM_certificate':        { type: 'image', file: 'https://res.cloudinary.com/dfyzb3cbz/image/upload/v1781152181/portfolio/certs/ibm_certificate.jpg' },
-            'OpenJS_certificate':     { type: 'image', file: 'https://res.cloudinary.com/dfyzb3cbz/image/upload/v1781152182/portfolio/certs/openjs_certificate.jpg' },
-            'Microsoft_certificate':  { type: 'image', file: 'https://res.cloudinary.com/dfyzb3cbz/image/upload/v1781152183/portfolio/certs/microsoft_certificate.jpg' },
-            'EF-SET-Certificate':     { type: 'image', file: 'https://res.cloudinary.com/dfyzb3cbz/image/upload/v1781152184/portfolio/certs/ef_set_certificate.jpg' },
-            'Claude-101_certificate': { type: 'image', file: 'https://res.cloudinary.com/dfyzb3cbz/image/upload/v1781152185/portfolio/certs/claude_101_certificate.jpg' },
-            'Samsung_cert':           { type: 'image', file: 'https://res.cloudinary.com/dfyzb3cbz/image/upload/v1781152186/portfolio/certs/samsung_cert.jpg' },
-            'Berlitz-Egypt_cert':     { type: 'image', file: 'https://res.cloudinary.com/dfyzb3cbz/image/upload/v1781152187/portfolio/certs/berlitz_egypt_cert.jpg' },
-            'AI-Data-Science_cert':   { type: 'image', file: 'https://res.cloudinary.com/dfyzb3cbz/image/upload/v1781152188/portfolio/certs/ai_data_science_cert.jpg' },
-            'Huma-Volvo_certificate': { type: 'image', file: 'https://res.cloudinary.com/dfyzb3cbz/image/upload/v1781152189/portfolio/certs/huma_volvo_certificate.jpg' }
-        };
-
         // ── VIDEO MODAL (YouTube) ─────────────────────────────────────────
         const videoModal  = document.getElementById('video-modal');
         const ytWrap      = document.getElementById('yt-embed-wrap');
@@ -1553,13 +1532,12 @@
         document.addEventListener('mozfullscreenchange',    onFsChange);
         document.addEventListener('MSFullscreenChange',     onFsChange);
         function onFsChange() {
-            // If we just EXITED fullscreen and the modal is open, close it cleanly
             if (!isFullscreen() && videoModal && videoModal.classList.contains('open')) {
                 videoModal.classList.remove('open');
                 document.body.style.overflow = '';
                 const iframe = ytWrap ? ytWrap.querySelector('iframe') : null;
                 if (iframe) iframe.remove();
-                history.pushState({ slug: '' }, '', '/');
+                // No URL change
             }
         }
 
@@ -1594,74 +1572,19 @@
         if (imgClose)  imgClose.addEventListener('click', closeImg);
         if (imgModal)  imgModal.addEventListener('click', e => { if (e.target === imgModal) closeImg(); });
 
-        // ── URL HELPERS ───────────────────────────────────────────────────
-        function setUrlSlug(slug) {
-            const url = slug ? '/' + slug : '/';
-            if (window.location.pathname !== url)
-                history.pushState({ slug: slug || '' }, '', url);
-        }
-
-        function openBySlug(slug) {
-            if (!slug) return;
-            const item = mediaMap[slug];
-            if (!item) return;
-            if (item.type === 'youtube') {
-                closeImg();
-                openVideo(item.ytid, slug.replace(/-/g,' '));
-            } else {
-                closeVideo();
-                openImg(item.file, slug.replace(/-/g,' '));
-            }
-        }
-
-        // Back / Forward
-        window.addEventListener('popstate', function(event) {
-            const slug = event.state && event.state.slug;
-            if (slug) {
-                openBySlug(slug);
-            } else {
-                closeVideo();
-                closeImg();
-            }
-        });
-
-        // Auto-open on direct URL load (GitHub Pages SPA support)
-        (function() {
-            // Check sessionStorage redirect first (404 → redirect pattern)
-            try {
-                const redirect = sessionStorage.getItem('redirect');
-                if (redirect && redirect !== '/') {
-                    sessionStorage.removeItem('redirect');
-                    const slug = redirect.replace(/^\/+|\/+$/g, '');
-                    history.replaceState({ slug }, '', redirect);
-                    openBySlug(slug);
-                    return;
-                }
-            } catch(e) {}
-
-            const slug = window.location.pathname.replace(/^\/|\/$/g, '');
-            if (!slug) return;
-            history.replaceState({ slug }, '', '/' + slug);
-            openBySlug(slug);
-        })();
-
         // ── CLICK HANDLERS ────────────────────────────────────────────────
         document.querySelectorAll('.proj-card[data-slug]').forEach(card => {
             card.addEventListener('click', function() {
-                const slug  = this.dataset.slug;
                 const ytid  = this.dataset.ytid;
                 const title = this.querySelector('.proj-title').textContent;
-                setUrlSlug(slug);
                 openVideo(ytid, title);
             });
         });
 
         document.querySelectorAll('.cert-card[data-slug]').forEach(card => {
             card.addEventListener('click', function() {
-                const slug  = this.dataset.slug;
                 const img   = this.dataset.img;
                 const title = this.querySelector('.cert-name').textContent;
-                setUrlSlug(slug);
                 openImg(img, title);
             });
         });
