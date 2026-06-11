@@ -16,7 +16,6 @@
             display: flex;
             align-items: center;
             gap: 1.2rem;
-            margin-left: auto;        /* push to the right */
         }
         /* ── HAMBURGER BUTTON ───────────────────────────────── */
         .hamburger {
@@ -105,6 +104,9 @@
 
         /* ── RESPONSIVE BEHAVIOUR ──────────────────────────── */
         @media (max-width: 900px) {
+            .nav-right {
+                margin-left: auto;   /* push to right only on mobile */
+            }
             .hamburger {
                 display: flex;
             }
@@ -113,6 +115,60 @@
             }
             .nav-links {
                 display: none !important;   /* hide the desktop inline menu */
+            }
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            .hero-right {
+                display: none;
+            }
+            .numbers-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .projects-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+            .skills-layout {
+                grid-template-columns: 1fr;
+            }
+            .certs-grid {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            }
+            .contact-layout {
+                grid-template-columns: 1fr;
+            }
+            nav {
+                padding: 1rem 1.5rem;
+            }
+            .section {
+                padding: 4rem 1.5rem;
+            }
+            .hero-left,
+            .hero-right {
+                padding: 3rem 1.5rem;
+            }
+            .exp-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .exp-badge {
+                display: none;
+            }
+
+            /* Hide desktop links, show hamburger */
+            .nav-links {
+                display: none !important;
+            }
+            .hamburger {
+                display: flex;            /* override the default display:none */
+            }
+
+            /* Hide custom cursor on mobile */
+            html.js body {
+                cursor: auto;
+            }
+            #cursor {
+                display: none !important;
             }
         }
 
@@ -750,7 +806,7 @@
         <div class="hero-right">
             <div>
                 <p class="hero-desc">
-                    Senior Full-Stack Developer and Co-Founder of DeltaDev with 8+ years of experience delivering enterprise-grade web and mobile systems. Specialized in NodeJS, React, and AI integration, with a track record of 88+ projects including full ERP, CRM, and POS systems across 50+ screens for clients in Saudi Arabia, UAE, and France. Experienced in leading cross-functional teams, architecting scalable backend infrastructure, and integrating production-ready AI agents into real-world platforms.
+                    Senior Full-Stack Developer and Co-Founder of DeltaDev with 8+ years of experience delivering enterprise-grade web and mobile systems. Specialized in NodeJS, React, and AI integration, with a track record of 88+ projects including full ERP, CRM, and POS systems across 50+ screens for clients in Saudi Arabia, UAE, USA and France. Experienced in leading cross-functional teams, architecting scalable backend infrastructure, and integrating production-ready AI agents into real-world platforms.
                 </p>
             </div>
             <div>
