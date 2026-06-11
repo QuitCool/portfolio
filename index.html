@@ -11,6 +11,120 @@
         rel="stylesheet"
     />
     <style>
+        /* ── RIGHT SIDE OF NAV (hamburger + dark mode) ───── */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-left: auto;        /* push to the right */
+        }
+        /* ── HAMBURGER BUTTON ───────────────────────────────── */
+        .hamburger {
+            display: none;               /* hidden on desktop */
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 600;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 38px;
+            height: 38px;
+            gap: 6px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--ink);
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+        }
+
+        /* Hamburger → X animation */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* ── MOBILE MENU PANEL ──────────────────────────────── */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 72px;                /* same as header height (padding + border) */
+            left: 0;
+            width: 100%;
+            background: var(--paper);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 550;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .mobile-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            padding: 1.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .mobile-menu li a {
+            font-size: 14px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 0;
+            transition: color 0.2s;
+        }
+
+        .mobile-menu li a:hover {
+            color: var(--accent);
+        }
+
+        /* ── RESPONSIVE BEHAVIOUR ──────────────────────────── */
+        @media (max-width: 900px) {
+            .hamburger {
+                display: flex;
+            }
+            .mobile-menu {
+                display: block;        /* still hidden via opacity/transform until .open is added */
+            }
+            .nav-links {
+                display: none !important;   /* hide the desktop inline menu */
+            }
+        }
+
+        /* Fix: remove cursor:none on mobile for touch targets */
+        @media (max-width: 900px) {
+            html.js body {
+                cursor: auto;
+            }
+            #cursor {
+                display: none !important;
+            }
+        }
         /* Make project numbers 01 and 02 always light, even in dark mode */
         .proj-card.light-num .proj-num {
             color: rgba(255, 255, 255, 0.85) !important;
@@ -450,6 +564,8 @@
         html.js .reveal-left{opacity:0;transform:translateX(-24px);transition:opacity .7s ease,transform .7s ease}
         html.js .reveal-left.in{opacity:1;transform:none}
         @media(max-width:900px){
+            html.js body { cursor: auto; }
+            #cursor { display: none !important; }
             .hero{grid-template-columns:1fr}
             .hero-right{display:none}
             .numbers-row{grid-template-columns:repeat(2,1fr)}
@@ -559,22 +675,41 @@
     <!-- NAV -->
     <nav>
         <div class="nav-logo">MH<span>.</span></div>
+
         <ul class="nav-links">
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#certificates">Certificates</a></li>
-          <li><a href="#work">Work</a></li>
-          <li><a href="#skills">Stack</a></li>
-          <li><a href="#contact">Contact</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#certificates">Certificates</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#skills">Stack</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
-        <button id="dm-toggle">
-            <span id="dm-icon-el" style="display:inline-flex;align-items:center;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-            </span>
-            <span id="dm-text">dark</span>
-        </button>
+
+        <div class="nav-right">
+            <button id="dm-toggle">
+                <span id="dm-icon-el" style="display:inline-flex;align-items:center;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </span>
+                <span id="dm-text">dark</span>
+            </button>
+
+            <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </nav>
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#certificates">Certificates</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#skills">Stack</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
 
     <!-- HERO -->
     <section class="hero">
@@ -1120,6 +1255,61 @@
     </div>
 
     <script>
+        // ── MOBILE MENU TOGGLE ─────────────────────────────────
+        (function() {
+            const hamburger = document.querySelector('.hamburger');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+
+            if (!hamburger || !mobileMenu) return;
+
+            function openMenu() {
+                hamburger.classList.add('active');
+                hamburger.setAttribute('aria-expanded', 'true');
+                mobileMenu.classList.add('open');
+                document.body.style.overflow = 'hidden';   // prevent scroll behind menu
+            }
+
+            function closeMenu() {
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            hamburger.addEventListener('click', () => {
+                if (mobileMenu.classList.contains('open')) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            });
+
+            // Close menu when a link is clicked
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMenu();
+                });
+            });
+
+            // Optional: close menu on pressing Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                    closeMenu();
+                }
+            });
+
+            // Close menu when clicking outside (on the page content)
+            document.addEventListener('click', (e) => {
+                const target = e.target;
+                // If menu is open and click is not inside nav or on hamburger
+                if (mobileMenu.classList.contains('open') &&
+                    !target.closest('nav') &&
+                    !target.closest('.mobile-menu')) {
+                    closeMenu();
+                }
+            });
+        })();
         // ── GRACEFUL DEGRADATION ──────────────────────────────────────────
         document.documentElement.classList.add('js');
 
