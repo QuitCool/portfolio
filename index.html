@@ -86,7 +86,6 @@
     color:var(--accent); margin-bottom:1.75rem;
     display:flex; align-items:center; gap:.65rem;
   }
-  .role-line b{color:var(--accent); font-weight:700}
   .role-line .dot{width:3px;height:3px;border-radius:50%;background:var(--accent); opacity:.6}
   h1.title{
     font-family:var(--display); font-weight:800; letter-spacing:-.025em;
@@ -208,11 +207,39 @@
   .img-frame{width:100%; max-height:80vh; display:flex; align-items:center; justify-content:center; background:#000}
   .img-frame img{max-width:100%; max-height:80vh; object-fit:contain}
 
-  /* ARABIC MODE */
-  body.lang-ar [data-ar]{font-family:'Cairo',var(--body); direction:rtl; unicode-bidi:isolate; line-height:1.95}
+  /* ARABIC MODE — full layout mirroring
+     Note: dir="rtl" is set on <html> via JS. Flex rows and CSS grid tracks
+     mirror direction automatically in that case — no manual row-reverse or
+     track reordering needed (adding it on top would cancel the mirroring
+     back out). Only physical (non-logical) properties like border-left/
+     right and margin-left/right need manual swapping below. */
+  body.lang-ar{ text-align:right }
+  body.lang-ar [data-ar]{font-family:'Cairo',var(--body); line-height:1.95}
   body.lang-ar .metric-label[data-ar],
   body.lang-ar .eyebrow[data-ar],
   body.lang-ar .section-label[data-ar]{line-height:1.4}
+
+  /* hero */
+  body.lang-ar .hero-notes p:last-child{text-align:right}
+  body.lang-ar .quick-contact a{align-self:flex-end}
+  body.lang-ar .metric{border-right:none; border-left:1px solid var(--line)}
+  body.lang-ar .metric:last-child{border-left:none}
+
+  /* certificates ticker — physical margin needs swapping since the
+     separator dash sits on the opposite physical side once mirrored */
+  body.lang-ar .cred-item::after{margin-left:0; margin-right:2.2rem}
+
+  /* things that must always stay LTR regardless of page direction */
+  body.lang-ar .logo,
+  body.lang-ar .proj-stack,
+  body.lang-ar .stack-group p,
+  body.lang-ar .metric-num,
+  body.lang-ar .quick-contact a[href^="mailto"],
+  body.lang-ar .quick-contact a[href^="tel"],
+  body.lang-ar .contact-btn[href^="mailto"],
+  body.lang-ar .contact-btn[href^="tel"]{
+    direction:ltr; unicode-bidi:isolate;
+  }
 </style>
 </head>
 <body>
@@ -238,7 +265,7 @@
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow reveal"><span class="status-dot"></span> <span data-ar="متاح لمشاريع مختارة">Available for select projects</span></div>
-    <div class="role-line reveal" data-ar="مطوّر إبداعي <span class=&quot;dot&quot;></span> قائد تقني"><b data-ar="مطوّر إبداعي">Creative developer</b><span class="dot"></span><span data-ar="قائد تقني">Technical leader</span></div>
+    <div class="role-line reveal"><span data-ar="مطوّر إبداعي">Creative developer</span><span class="dot"></span><span data-ar="قائد تقني">Technical leader</span></div>
     <h1 class="title reveal" data-ar="أبني أنظمة رقمية تصمد في العالم الحقيقي.">I build digital systems that survive the real world.</h1>
 
     <div class="hero-grid">
@@ -654,6 +681,8 @@
     function apply() {
       translatable.forEach(el => { el.innerHTML = isArabic ? el.dataset.ar : el.dataset.en; });
       document.body.classList.toggle('lang-ar', isArabic);
+      document.documentElement.setAttribute('dir', isArabic ? 'rtl' : 'ltr');
+      document.documentElement.setAttribute('lang', isArabic ? 'ar' : 'en');
       document.getElementById('lang-text').textContent = isArabic ? 'EN' : 'عربي';
     }
     document.getElementById('lang-toggle').addEventListener('click', () => {
