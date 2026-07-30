@@ -654,7 +654,13 @@
         h1 .row:nth-child(2) span {
             animation-delay: .12s;
             color: transparent;
-            -webkit-text-stroke: 1.5px var(--amber)
+            -webkit-text-stroke: 0.9px var(--amber);
+        }
+
+        @media (min-width: 768px) {
+            h1 .row:nth-child(2) span {
+                -webkit-text-stroke: 1.5px var(--amber);
+            }
         }
 
         @keyframes rise {
@@ -3552,6 +3558,8 @@
                     destroy: function () {
                         if (animFrame) cancelAnimationFrame(animFrame);
                         window.removeEventListener('resize', resize);
+                        if (svg && svg.parentNode) svg.parentNode.removeChild(svg);
+                        if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
                     }
                 };
             }
@@ -3559,15 +3567,25 @@
             var mohsenTextEl = document.getElementById('mohsen-text');
             var mohsenJuiceEl = document.getElementById('juice-mohsen');
             if (mohsenTextEl && mohsenJuiceEl) {
-                setTimeout(function () {
+                var juiceInstance = null;
+                var resizeTimer = null;
+
+                function initJuiceEffect() {
+                    if (juiceInstance) {
+                        juiceInstance.destroy();
+                        juiceInstance = null;
+                    }
                     var cs = window.getComputedStyle(mohsenTextEl);
-                    var w = mohsenTextEl.offsetWidth || 500;
-                    var h = mohsenTextEl.offsetHeight || 120;
+                    var w = mohsenTextEl.offsetWidth || 300;
+                    var h = mohsenTextEl.offsetHeight || 80;
+                    var fs = parseFloat(cs.fontSize) || 48;
+
                     var c = document.createElement('canvas');
                     c.width = w * 2;
                     c.height = h * 2;
                     var cx = c.getContext('2d');
                     cx.scale(2, 2);
+
                     var grad = cx.createLinearGradient(0, 0, 0, h);
                     grad.addColorStop(0, '#ff8800');
                     grad.addColorStop(0.5, '#ff3b00');
@@ -3577,22 +3595,39 @@
                     if (cs.letterSpacing && cs.letterSpacing !== 'normal') cx.letterSpacing = cs.letterSpacing;
                     cx.textAlign = 'center';
                     cx.textBaseline = 'middle';
-                    // We offset slightly to account for line-height and bounding box differences
-                    var yOffset = parseFloat(cs.fontSize) * 0.08;
+
+                    // Responsive vertical offset calculation for mobile (fs < 65) vs desktop
+                    var ratio = fs < 65 ? 0.02 : 0.08;
+                    var yOffset = fs * ratio;
                     cx.fillText('MOHSEN', w / 2, (h / 2) + yOffset);
 
-                    createJuiceEffect(mohsenJuiceEl, {
+                    juiceInstance = createJuiceEffect(mohsenJuiceEl, {
                         image: c.toDataURL('image/png'),
                         mode: 'fit',
                         particleColor: '#ff3b00',
-                        particleSize: 5,
+                        particleSize: fs < 65 ? 3.5 : 5,
                         density: 30,
                         speed: 3.5,
                         hoverEnabled: true,
-                        hoverRadius: 49.5,
+                        hoverRadius: fs < 65 ? 30 : 45,
                         scale: 10
                     });
-                }, 300);
+                }
+
+                var startInit = function () {
+                    setTimeout(initJuiceEffect, 150);
+                };
+
+                if (document.fonts && document.fonts.ready) {
+                    document.fonts.ready.then(startInit);
+                } else {
+                    startInit();
+                }
+
+                window.addEventListener('resize', function () {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(initJuiceEffect, 200);
+                });
             }
 
         })();
