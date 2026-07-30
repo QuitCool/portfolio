@@ -654,12 +654,12 @@
         h1 .row:nth-child(2) span {
             animation-delay: .12s;
             color: transparent;
-            -webkit-text-stroke: 0.9px var(--amber);
+            -webkit-text-stroke: 0.4px var(--amber);
         }
 
         @media (min-width: 768px) {
             h1 .row:nth-child(2) span {
-                -webkit-text-stroke: 1.5px var(--amber);
+                -webkit-text-stroke: 1.2px var(--amber);
             }
         }
 
@@ -3236,7 +3236,7 @@
                 container.appendChild(svg);
 
                 var canvas = document.createElement('canvas');
-                canvas.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;filter:url(#' + filterId + ');';
+                canvas.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;opacity:0;transition:opacity 0.1s ease-in;filter:url(#' + filterId + ');';
                 container.appendChild(canvas);
 
                 var ctx = canvas.getContext('2d');
@@ -3326,8 +3326,11 @@
                         imgRef = img;
                         imgReady = true;
                         computeDistanceField();
+                        canvas.style.opacity = '1';
                     };
                     img.src = opt.image;
+                } else {
+                    canvas.style.opacity = '1';
                 }
 
                 function resize() {
@@ -3416,6 +3419,11 @@
                     lastTime = now;
                     ctx.globalCompositeOperation = 'source-over';
                     ctx.clearRect(0, 0, w, h);
+
+                    if (opt.image && !imgReady) {
+                        animFrame = requestAnimationFrame(tick);
+                        return;
+                    }
 
                     mouse.speed *= 0.88;
                     var breakProb = (breakChance / 100) * dt;
@@ -3610,12 +3618,12 @@
                         speed: 3.5,
                         hoverEnabled: true,
                         hoverRadius: fs < 65 ? 30 : 45,
-                        scale: 10
+                        scale: fs < 65 ? 9.85 : 10
                     });
                 }
 
                 var startInit = function () {
-                    setTimeout(initJuiceEffect, 150);
+                    initJuiceEffect();
                 };
 
                 if (document.fonts && document.fonts.ready) {
