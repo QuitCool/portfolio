@@ -1933,7 +1933,9 @@
             <div class="hero-tag" data-i18n="hero.tag">Senior Full-Stack Developer · Co-Founder @ DeltaDev</div>
             <h1>
                 <span class="row">
-                    <span class="glitchable" data-txt="MOHSEN" id="mohsen-text" style="position:relative;display:inline-block;">MOHSEN<span id="juice-mohsen" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:4px;"></span></span>
+                    <span id="mohsen-text" style="position:relative;display:inline-block;cursor:pointer;">MOHSEN<span
+                            id="juice-mohsen"
+                            style="position:absolute;inset:0;pointer-events:none;overflow:visible;"></span></span>
                 </span>
                 <span class="row"><span class="glitchable" data-txt="HAJJAJ">HAJJAJ</span></span>
             </h1>
@@ -3209,14 +3211,14 @@
                 var breakChance = 50;
 
                 var filterId = 'liquid-goo-' + Math.random().toString(36).substring(2, 9);
-                
+
                 var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 svg.setAttribute('aria-hidden', 'true');
                 svg.style.cssText = 'position:absolute;width:0;height:0;pointer-events:none;';
-                
+
                 var blurVal = Math.max(0.3, Math.min(opt.particleSize * 0.35, gooStrength * 0.35));
                 var matrixVal = '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7';
-                
+
                 svg.innerHTML = '<defs>' +
                     '<filter id="' + filterId + '" color-interpolation-filters="sRGB">' +
                     '<feGaussianBlur in="SourceGraphic" stdDeviation="' + blurVal + '" result="blur" />' +
@@ -3224,7 +3226,7 @@
                     '<feComposite in="SourceGraphic" in2="goo" operator="atop" />' +
                     '</filter>' +
                     '</defs>';
-                
+
                 container.appendChild(svg);
 
                 var canvas = document.createElement('canvas');
@@ -3314,7 +3316,7 @@
                 if (opt.image) {
                     var img = new Image();
                     img.crossOrigin = 'anonymous';
-                    img.onload = function() {
+                    img.onload = function () {
                         imgRef = img;
                         imgReady = true;
                         computeDistanceField();
@@ -3464,7 +3466,7 @@
                         var edgeBand = h * 0.15;
                         var distFromEdge = Math.min(p.y, h - p.y);
                         var vertFactor = distFromEdge >= edgeBand ? 1 : Math.max(0.25, distFromEdge / edgeBand);
-                        
+
                         var alphaFactor = 1;
                         if (distMap && !allowOffBounds) {
                             var ix = Math.max(0, Math.min(w - 1, Math.floor(p.x)));
@@ -3516,7 +3518,8 @@
                     animFrame = requestAnimationFrame(tick);
                 }
 
-                container.addEventListener('mousemove', function(e) {
+                var targetEl = container.parentElement || container;
+                targetEl.addEventListener('mousemove', function (e) {
                     var rect = container.getBoundingClientRect();
                     var scaleX = rect.width > 0 ? w / rect.width : 1;
                     var scaleY = rect.height > 0 ? h / rect.height : 1;
@@ -3525,14 +3528,16 @@
                     if (mouse.prevX > -9999) {
                         var ddx = mx - mouse.prevX;
                         var ddy = my - mouse.prevY;
-                        mouse.speed = Math.sqrt(ddx * ddx + ddy * ddy);
+                        mouse.speed = Math.max(5, Math.sqrt(ddx * ddx + ddy * ddy));
+                    } else {
+                        mouse.speed = 12;
                     }
                     mouse.prevX = mx; mouse.prevY = my;
                     mouse.x = mx; mouse.y = my;
                     mouse.active = true;
                 });
 
-                container.addEventListener('mouseleave', function() {
+                targetEl.addEventListener('mouseleave', function () {
                     mouse.active = false;
                     mouse.x = -9999; mouse.y = -9999;
                     mouse.prevX = -9999; mouse.prevY = -9999;
@@ -3544,7 +3549,7 @@
                 animFrame = requestAnimationFrame(tick);
 
                 return {
-                    destroy: function() {
+                    destroy: function () {
                         if (animFrame) cancelAnimationFrame(animFrame);
                         window.removeEventListener('resize', resize);
                     }
@@ -3554,7 +3559,7 @@
             var mohsenTextEl = document.getElementById('mohsen-text');
             var mohsenJuiceEl = document.getElementById('juice-mohsen');
             if (mohsenTextEl && mohsenJuiceEl) {
-                setTimeout(function() {
+                setTimeout(function () {
                     var cs = window.getComputedStyle(mohsenTextEl);
                     var w = mohsenTextEl.offsetWidth || 500;
                     var h = mohsenTextEl.offsetHeight || 120;
@@ -3573,7 +3578,7 @@
                     cx.textAlign = 'center';
                     cx.textBaseline = 'middle';
                     // We offset slightly to account for line-height and bounding box differences
-                    var yOffset = parseFloat(cs.fontSize) * 0.08; 
+                    var yOffset = parseFloat(cs.fontSize) * 0.08;
                     cx.fillText('MOHSEN', w / 2, (h / 2) + yOffset);
 
                     createJuiceEffect(mohsenJuiceEl, {
@@ -3584,7 +3589,7 @@
                         density: 30,
                         speed: 3.5,
                         hoverEnabled: true,
-                        hoverRadius: 80,
+                        hoverRadius: 49.5,
                         scale: 10
                     });
                 }, 300);
