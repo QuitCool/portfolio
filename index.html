@@ -11,7 +11,6 @@
                 }))
             } function y(e) { let t; m({ source: "unhandledrejection", name: (t = _(e.reason, "Unhandled promise rejection")).name, message: t.message, stack: t.stack }) } function b(e) { let t = e.data; t && "object" == typeof t && t.type === o && g() } function _(e, t) { return e instanceof Error ? { name: e.name || "Error", message: e.message || t, stack: e.stack || "" } : e && "object" == typeof e ? { name: "string" == typeof e.name ? e.name : "Error", message: "string" == typeof e.message ? e.message : function (e) { try { return JSON.stringify(e) } catch { return "" } }(e) || t, stack: "string" == typeof e.stack ? e.stack : "" } : { name: "Error", message: "string" == typeof e ? e : null == e ? t : String(e), stack: "" } } async function w(e) { var t, r; let n = (t = String(e.stack).split("\n").map(j).filter(Boolean), r = e.filename, t.map(e => ({ ...e, file: function (e, t) { var r, n; if ("string" != typeof e || 0 === e.length) return; let i = A(e); if (i) return O(i); if (r = e, /^[a-zA-Z][a-zA-Z\d+.-]*:/.test(r)) return e; if (t && N(t) === N(e)) { let e = A(t); return e ? O(e) : t } let a = e.startsWith("_next/") ? `/${e}` : e; return a.startsWith("/_next/") ? O(a) : !(n = a).includes("/") && n.endsWith(".js") && (n.startsWith("_") || n.includes("._.") || n.startsWith("node_modules_") || n.startsWith("turbopack-")) ? O(`/_next/static/chunks/${a}`) : e }(e.file, r) }))); return { message: e.message, stack: e.stack, frames: n, mappedFrames: n.length > 0 ? await x(n) : [] } } async function x(e) { let t = function (e) { let t = [], r = new Set; for (let n of (k(t, r, e), [R, I, P])) { let i = function (e, t) { let r = !1, n = e.map(e => { if ("string" != typeof e.file) return e; let n = t(e.file); return n && n !== e.file ? (r = !0, { ...e, file: n }) : e }); return r ? n : null }(e, n); i && k(t, r, i) } return t }(e), r = null; for (let n of t) { let t = await E(n); if (function (e) { for (let n of e) { var t, r; let e = D(t = n) && "fulfilled" === t.status && D(t.value) && D(t.value.originalStackFrame) ? t.value.originalStackFrame : null; if (!e || !0 === e.ignored) continue; let i = "string" != typeof (r = e.file) ? "" : r.trim(); if (!(!i || function (e) { let t = C(e); return /\/(?:_next\/static|\.next\/dev\/static)\/chunks\//.test(t) || t.includes("/next/dist/compiled/") }(i))) return !0 } return !1 }(t.mappedFrames)) return S(e, t.mappedFrames); if (r = t.mappedFrames, !t.shouldTryNextVariant) break } return r ?? $(e, "No stack frames to map.") } async function E(e) { try { let t = function (e) { try { return new URL(e, window.location.href).origin !== window.location.origin } catch { return !1 } }(l), r = { body: JSON.stringify({ frames: e, isServer: !1, isEdgeServer: !1, isAppDirectory: u, sourceOrigin: window.location.origin }), cache: "no-store", credentials: t ? "omit" : "same-origin", method: "POST", mode: t ? "cors" : "same-origin" }; t || (r.headers = { "content-type": "application/json" }); let n = await fetch(l, { ...r }); if (!n.ok || 204 === n.status) { let t = await n.text().catch(() => ""); return { mappedFrames: $(e, t || "No original stack frame response from Next dev server."), shouldTryNextVariant: !1 } } let i = await n.json(); if (!Array.isArray(i)) return { mappedFrames: $(e, "Invalid original stack frame response from Next dev server."), shouldTryNextVariant: !1 }; return { mappedFrames: S(e, i), shouldTryNextVariant: !0 } } catch (t) { return { mappedFrames: $(e, t instanceof Error ? t.message : String(t)), shouldTryNextVariant: !1 } } } function S(e, t) { return e.map((e, r) => t[r] || { status: "rejected", reason: "No original stack frame response for frame." }) } function $(e, t) { return e.map(() => ({ status: "rejected", reason: t })) } function k(e, t, r) { let n = JSON.stringify(r.map(e => e.file)); t.has(n) || (t.add(n), e.push(r)) } function O(e) { return c ? `${c}/${e.replace(/^\/_next\/static\/?/, "")}` : e } function R(e) { let t = T(e); return t ? `.next/dev/static/${t.replace(/^\/_next\/static\/?/, "")}` : null } function I(e) { let t = T(e); return t ? t.replace(/^\/+/, "") : null } function P(e) { let t = T(e); if (!t) return null; try { return new URL(t, window.location.origin).href } catch { return null } } function T(e) { var t, r; let n, i = C(e); if (i.startsWith("/_next/static/")) return i; let a = (r = "/.next/dev/static/", -1 === (n = (t = i).indexOf(r)) ? "" : t.slice(n + r.length)); return a ? `/_next/static/${a}` : "" } function A(e) { if (e.startsWith("/_next/")) return e; if (e.startsWith("_next/")) return `/${e}`; try { let t = new URL(e); return t.pathname.startsWith("/_next/") ? t.pathname : "" } catch { return "" } } function C(e) { try { return new URL(e).pathname } catch { } return e.startsWith("/") ? e : `/${e}` } function N(e) { return e.split("?")[0].split(/[\\/]/).pop() || e } function D(e) { return "object" == typeof e && null !== e } function j(e) { let t = e.trim(); if (!t.startsWith("at ")) return null; let r = t.slice(3), n = "<anonymous>", i = r, a = r.indexOf("("), o = r.endsWith(")") ? r.length - 1 : -1; -1 !== a && -1 !== o && o > a && (n = r.slice(0, a).trim() || "<anonymous>", i = r.slice(a + 1, o)); let s = /^(.*):(\d+):(\d+)$/.exec(i); return s ? { file: s[1], methodName: n, arguments: [], line1: Number(s[2]), column1: Number(s[3]) } : null } function U(e) { return "number" == typeof e && Number.isFinite(e) && e > 0 ? e : void 0 } window.addEventListener("error", v), window.addEventListener("unhandledrejection", y), window.addEventListener("message", b), window[t] = { windowId: p, getSnapshot: () => ({ errors: h.errors.slice() }), reset: g, stop: function () { window.removeEventListener("error", v), window.removeEventListener("unhandledrejection", y), window.removeEventListener("message", b), delete window[t] } }, f(a, { existing: !1, href: window.location.href, windowId: p })
         })({ "messageType": "next-dev-bridge:event", "sourceMapEndpoint": "/_v0/next-dev-bridge-stack-frames", "sourceMapFrameRoot": "file:///vercel/share/v0-project/.next/dev/static" });</script>
-    <script async="" src="./MOHSEN.SYS, Senior Full-Stack Developer_files/v0-runtime-dist.js.download"></script>
     <style>
         nextjs-portal {
             display: none !important
@@ -419,6 +418,8 @@
         #mmenu.open {
             clip-path: inset(0 0 0 0)
         }
+        #mmenu:not(.open) { visibility: hidden; pointer-events: none; }
+        #mmenu.open { visibility: visible; pointer-events: auto; }
 
         #mmenu a {
             font-size: clamp(28px, 8vw, 44px);
@@ -722,12 +723,8 @@
             color: var(--amber)
         }
 
-        #typed-wrap::after {
-            content: '█';
-            color: var(--amber);
-            animation: blink 1.2s ease-in-out infinite;
-            margin-left: 2px
-        }
+        #typed-wrap::after { content: none; }
+        #typed::after { content: '█'; color: var(--amber); animation: blink 1.2s ease-in-out infinite; margin-left: 4px; }
 
         @keyframes blink {
 
@@ -1525,7 +1522,9 @@
 
         .term-cell {
             background: var(--panel);
-            padding: 15px 18px
+            padding: 15px 18px;
+            min-width: 0;
+            overflow-wrap: anywhere;
         }
 
         .term-cell .k {
@@ -1785,18 +1784,6 @@
         }
 
         /* ── LEVEL 2 MEDIA PROTECTION & SECURITY ─────────────────────────── */
-        img,
-        video,
-        iframe,
-        canvas {
-            -webkit-user-drag: none !important;
-            user-select: none !important;
-            -webkit-user-select: none !important;
-            -moz-user-select: none !important;
-            -ms-user-select: none !important;
-            -webkit-touch-callout: none !important;
-        }
-
         .pj-media::before,
         .ct-img::before {
             content: '';
@@ -1806,66 +1793,116 @@
             background: transparent;
         }
 
-        /* DevTools Detection & Auto-Blur Media */
-        body.devtools-detected img,
-        body.devtools-detected video,
-        body.devtools-detected iframe,
-        body.devtools-detected canvas,
-        body.devtools-detected .modal,
-        body.devtools-detected #img-modal-viewport,
-        body.devtools-detected .pj-media,
-        body.devtools-detected .ct-img {
-            filter: blur(40px) brightness(0.05) !important;
-            opacity: 0.05 !important;
-            transition: filter 0.1s ease, opacity 0.1s ease !important;
-        }
-
-        #security-alert {
-            display: none;
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 99999;
-            background: #180505;
-            border: 1px solid #ff3333;
-            color: #ff5555;
-            font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: 0.12em;
-            padding: 10px 22px;
-            border-radius: 4px;
-            box-shadow: 0 0 24px rgba(255, 0, 0, 0.45);
-            pointer-events: none;
-        }
-
-        body.devtools-detected #security-alert {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
         @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+        }
 
-            *,
-            *::before,
-            *::after {
-                animation-duration: .5s !important;
-                transition-duration: .001s !important
-            }
-
-            html {
-                scroll-behavior: auto
-            }
+        /* Portfolio refinement */
+        :root { --sans: 'Outfit', 'Avenir Next', system-ui, sans-serif; }
+        body { font-family: var(--sans); }
+        #status-shell {
+            position: sticky; top: 0; z-index: 100; width: 100%; height: 42px;
+            background: var(--bg);
+            transition: padding-top .55s cubic-bezier(.22,1,.36,1), padding-inline .55s cubic-bezier(.22,1,.36,1);
+        }
+        #statusbar {
+            position: relative; inset: auto; width: 100%; height: 42px; margin: 0 auto;
+            gap: clamp(10px, 1.5vw, 22px); padding: 0 clamp(16px, 3vw, 36px);
+            background: rgba(8,9,12,1); border-radius: 0; box-shadow: 0 1px 0 rgba(255,255,255,.05);
+            transition: width .55s cubic-bezier(.22,1,.36,1), max-width .55s cubic-bezier(.22,1,.36,1),
+                height .55s cubic-bezier(.22,1,.36,1), border-radius .55s cubic-bezier(.22,1,.36,1),
+                background-color .55s cubic-bezier(.22,1,.36,1), box-shadow .55s cubic-bezier(.22,1,.36,1), padding .55s cubic-bezier(.22,1,.36,1);
+        }
+        #statusbar.is-compact {
+            width: var(--compact-width, 980px); max-width: calc(100vw - 32px); height: 54px;
+            border-radius: 999px; background: rgba(20,21,24,.88); padding-inline: 24px;
+            box-shadow: 0 16px 42px rgba(0,0,0,.42); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        }
+        #status-shell.is-compact { padding-top: 12px; padding-inline: 16px; }
+        #statusbar .logo { white-space: nowrap; margin-right: 8px; }
+        #statusbar.is-compact .cell { display: none !important; }
+        #statusbar.is-compact { justify-content: flex-start; }
+        #statusbar.is-compact #nav-links { margin-right: 0; }
+        #statusbar.is-compact #lang-toggle { margin-left: auto; }
+        #statusbar.is-compact .grow { display: none; }
+        #nav-links { gap: 6px; flex-shrink: 0; }
+        #nav-links a { white-space: nowrap; padding: 6px 9px; }
+        #lang-toggle { border: 0; border-radius: 999px; background: rgba(255,255,255,.06); }
+        #lang-toggle button { padding: 7px 10px; }
+        #menu-btn { flex-shrink: 0; }
+        main { padding-top: 0; }
+        #hero {
+            min-height: min(760px, calc(100dvh - 42px));
+            display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr);
+            align-content: center; align-items: center; column-gap: clamp(28px, 6vw, 96px);
+            padding: clamp(54px, 8vw, 112px) clamp(20px, 8vw, 128px);
+        }
+        #hero-grid { opacity: .12; mask-image: radial-gradient(ellipse 70% 70% at 26% 46%, black 10%, transparent 82%); }
+        #hero h1 .row { overflow: visible; }
+        #hero h1 .row > span { transform: none; animation: none; }
+        #juice-mohsen, #mohsen-text canvas, #mohsen-text svg { display: none !important; }
+        #mohsen-text { cursor: default !important; }
+        .hero-tag, #hero h1, #typed-wrap, .hero-cta { grid-column: 1; }
+        .hero-tag { align-self: end; margin-bottom: 28px; letter-spacing: .16em; }
+        h1 { font-size: clamp(52px, 7vw, 108px); letter-spacing: -.055em; }
+        h1 .row:nth-child(2) span { color: var(--txt); -webkit-text-stroke: 0; }
+        .hero-summary { max-width: 52ch; margin-top: 18px; color: var(--dim); font: 400 clamp(15px, 1.4vw, 18px)/1.75 var(--sans); }
+        #typed-wrap { max-width: 54ch; margin-top: 22px; font-size: clamp(14px, 1.4vw, 17px); line-height: 1.8; }
+        .hero-meta { grid-column: 2; grid-row: 1 / span 4; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 26px 20px; margin: 0; padding-left: 28px; }
+        .hm-cell { padding: 10px 0; }
+        .hm-k { letter-spacing: .12em; font-size: 10px; }
+        .hm-v { font-size: clamp(30px, 3vw, 44px); }
+        .hero-cta { margin-top: 34px; }
+        .cmd-btn { border: 0; background: rgba(255,255,255,.055); border-radius: 3px; transition: transform .25s, background .25s, color .25s; }
+        .cmd-btn.solid { background: var(--amber); }
+        .cmd-btn:active, #top-btn:active, #menu-btn:active { transform: translateY(1px) scale(.98); }
+        a:focus-visible, button:focus-visible, [role=button]:focus-visible { outline: 2px solid var(--amber); outline-offset: 4px; }
+        .sec { padding-block: clamp(48px, 6vw, 92px); }
+        .sec-head { margin-bottom: 32px; }
+        .project-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 24px; margin: -8px 0 28px; }
+        .project-tools-intro { max-width: 44ch; color: var(--dim); font: 400 14px/1.7 var(--sans); }
+        .project-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        .project-filter button { display: inline-flex; align-items: center; gap: 9px; min-height: 38px; padding: 0 13px; border-radius: 3px; background: rgba(255,255,255,.045); color: var(--dim); font: 500 11px/1 var(--mono); white-space: nowrap; transition: background .25s, color .25s, transform .25s; }
+        .project-filter button:hover { color: var(--txt); background: rgba(255,255,255,.09); }
+        .project-filter button[aria-pressed="true"] { color: var(--bg); background: var(--amber); }
+        .project-filter .filter-count { font-size: 10px; opacity: .7; }
+        .project-results { min-height: 1em; margin: 0 0 10px; color: var(--dim); font: 10px/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+        .project-empty { display: none; padding: 28px 0; color: var(--dim); font: 13px/1.6 var(--sans); }
+        .project-empty.visible { display: block; }
+        .pj[hidden] { display: none !important; }
+        @media (max-width: 640px) { .project-tools { align-items: flex-start; flex-direction: column; } .project-filter { gap: 7px; } .project-filter button { padding-inline: 10px; } }
+        .pj { border-radius: 5px; }
+        .pj-media { border-radius: 4px; }
+        .ct-grid { gap: 10px; background: transparent; border: 0; }
+        .ct { border-radius: 5px; background: #101116; }
+        .ct-img { border: 0; }
+        @media (max-width: 899px) {
+            #hero { min-height: auto; grid-template-columns: 1fr; gap: 0; padding-top: 70px; padding-bottom: 60px; }
+            .hero-meta { grid-column: 1; grid-row: auto; padding: 28px 0 0; margin-top: 32px; }
+            #nav-links { display: none !important; }
+            #statusbar { justify-content: space-between; }
+            #statusbar .cell { display: none; }
+        }
+        @media (max-width: 520px) {
+            #statusbar { padding-inline: 14px; }
+            #status-shell.is-compact { padding-inline: 8px; }
+            #statusbar.is-compact { max-width: calc(100vw - 16px); padding-inline: 16px; }
+            #hero { padding-inline: 20px; }
+            h1 { font-size: clamp(47px, 15vw, 72px); }
+            .hero-meta { gap: 14px; }
+            .hm-k { font-size: 9px; letter-spacing: .08em; }
+            .hero-cta { display: grid; grid-template-columns: 1fr; }
+            .hero-cta .cmd-btn { justify-content: space-between; }
+            .pj-info { padding: 22px 18px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #status-shell, #statusbar { transition-duration: .01ms !important; }
+            .glitchable.glitch::before, .glitchable.glitch::after, .crt, .vignette { animation: none !important; }
         }
     </style>
-    <script src="./MOHSEN.SYS, Senior Full-Stack Developer_files/freeze-dry.umd.js.download" async=""></script>
 </head>
 
 <body class="">
-
-    <div class="crt" aria-hidden="true"></div>
-    <div class="vignette" aria-hidden="true"></div>
 
     <!-- BOOT -->
     <div id="boot" aria-hidden="true" class="done">
@@ -1888,6 +1925,7 @@
     </div>
 
     <!-- STATUS BAR -->
+    <div id="status-shell">
     <header id="statusbar">
         <span class="logo">MOHSEN<b>.SYS</b></span>
         <nav id="nav-links" aria-label="Main navigation">
@@ -1909,6 +1947,7 @@
         <button id="menu-btn" aria-label="Open menu"
             aria-expanded="false"><span></span><span></span><span></span></button>
     </header>
+    </div>
 
     <!-- MOBILE MENU -->
     <nav id="mmenu" aria-label="Mobile navigation">
@@ -1946,8 +1985,10 @@
                 </span>
                 <span class="row"><span class="glitchable" data-txt="HAJJAJ">HAJJAJ</span></span>
             </h1>
-            <div id="typed-wrap"><span class="prompt">mohsen@deltadev:~$</span> <span id="typed">whoami → senior
-                    full-stack developer, 8 yrs, 85+ projects</span></div>
+            <div id="typed-wrap">
+                <span class="prompt">mohsen@deltadev:~$</span> <span id="typed">whoami → enterprise web, mobile &amp; AI systems</span>
+                <p class="hero-summary" data-i18n="hero.summary">I build enterprise web and mobile products, AI-assisted tools, and operational systems that teams rely on every day.</p>
+            </div>
             <div class="hero-meta stag in">
                 <div class="hm-cell">
                     <div class="hm-k" data-i18n="hero.k.shipped">Projects_Shipped</div>
@@ -1982,9 +2023,20 @@
         <section class="sec" id="pj" data-rail="PROJECTS">
             <div class="sec-head"><b>[01]</b> <span data-i18n="sec.projects">EXEC_HISTORY, SELECTED PROJECTS</span>
             </div>
+            <div class="project-tools">
+                <p class="project-tools-intro" data-i18n="projects.intro">A small selection of systems built for teams, operators, and people on the move.</p>
+                <div class="project-filter" role="group" aria-label="Filter projects" data-i18n-aria="projects.filters">
+                    <button type="button" data-project-filter="all" aria-pressed="true"><span data-i18n="filter.all">All</span><span class="filter-count" data-filter-count="all">07</span></button>
+                    <button type="button" data-project-filter="ai" aria-pressed="false"><span data-i18n="filter.ai">AI &amp; tools</span><span class="filter-count" data-filter-count="ai">02</span></button>
+                    <button type="button" data-project-filter="enterprise" aria-pressed="false"><span data-i18n="filter.enterprise">Enterprise</span><span class="filter-count" data-filter-count="enterprise">03</span></button>
+                    <button type="button" data-project-filter="mobile" aria-pressed="false"><span data-i18n="filter.mobile">Mobile</span><span class="filter-count" data-filter-count="mobile">02</span></button>
+                </div>
+            </div>
+            <p class="project-results" id="project-results" aria-live="polite" data-i18n="projects.showing">Showing 7 selected projects</p>
+            <p class="project-empty" id="project-empty" data-i18n="projects.empty">No projects in this category yet.</p>
             <div class="pj-list">
 
-                <article class="pj rv in" data-yt="4I8moppdZRg" data-name="Agentic Repo, Demo" tabindex="0"
+                <article class="pj rv in" data-category="ai" data-yt="4I8moppdZRg" data-name="Agentic Repo, Demo" tabindex="0"
                     role="button" aria-label="Play Agentic Repo demo video">
                     <div class="pj-info">
                         <div class="pj-top"><span class="idx">P_01</span><span data-i18n="pj1.top">SaaS · AI
@@ -2006,7 +2058,7 @@
                     </div>
                 </article>
 
-                <article class="pj rv in" data-yt="_Oui2QCE1AA" data-name="Delta Code Extension, Demo" tabindex="0"
+                <article class="pj rv in" data-category="ai" data-yt="_Oui2QCE1AA" data-name="Delta Code Extension, Demo" tabindex="0"
                     role="button" aria-label="Play Delta Code Extension demo video">
                     <div class="pj-info">
                         <div class="pj-top"><span class="idx">P_02</span><span data-i18n="pj2.top">Internal Tool · VS
@@ -2026,7 +2078,7 @@
                     </div>
                 </article>
 
-                <article class="pj rv in" data-yt="Yr9lzb4icKs" data-name="Qiblah, Demo" tabindex="0" role="button"
+                <article class="pj rv in" data-category="mobile" data-yt="Yr9lzb4icKs" data-name="Qiblah, Demo" tabindex="0" role="button"
                     aria-label="Play Qiblah demo video">
                     <div class="pj-info">
                         <div class="pj-top"><span class="idx">P_03</span><span data-i18n="pj3.top">Web App · Saudi
@@ -2046,7 +2098,7 @@
                     </div>
                 </article>
 
-                <article class="pj rv in" data-yt="EF7mxWe0CMw" data-name="Pharma System, Demo" tabindex="0"
+                <article class="pj rv in" data-category="enterprise" data-yt="EF7mxWe0CMw" data-name="Pharma System, Demo" tabindex="0"
                     role="button" aria-label="Play Pharma System demo video">
                     <div class="pj-info">
                         <div class="pj-top"><span class="idx">P_04</span><span data-i18n="pj4.top">Desktop · 136 Screens
@@ -2066,7 +2118,7 @@
                     </div>
                 </article>
 
-                <article class="pj rv in" data-yt="wYfMSxCavbA" data-name="Project Management, Demo" tabindex="0"
+                <article class="pj rv in" data-category="enterprise" data-yt="wYfMSxCavbA" data-name="Project Management, Demo" tabindex="0"
                     role="button" aria-label="Play Project Management demo video">
                     <div class="pj-info">
                         <div class="pj-top"><span class="idx">P_05</span><span data-i18n="pj5.top">Web App · Emirati
@@ -2087,7 +2139,7 @@
                     </div>
                 </article>
 
-                <article class="pj rv in" data-yt="Uoeg_rkyXNU" data-name="MediBroker, Demo" tabindex="0" role="button"
+                <article class="pj rv in" data-category="enterprise" data-yt="Uoeg_rkyXNU" data-name="MediBroker, Demo" tabindex="0" role="button"
                     aria-label="Play MediBroker demo video">
                     <div class="pj-info">
                         <div class="pj-top"><span class="idx">P_06</span><span data-i18n="pj6.top">Web App · French
@@ -2107,7 +2159,7 @@
                     </div>
                 </article>
 
-                <article class="pj rv in" data-yt="yE_dYYwq3rM" data-name="Diziel App, Demo" tabindex="0" role="button"
+                <article class="pj rv in" data-category="mobile" data-yt="yE_dYYwq3rM" data-name="Diziel App, Demo" tabindex="0" role="button"
                     aria-label="Play Diziel App demo video">
                     <div class="pj-info">
                         <div class="pj-top"><span class="idx">P_07</span><span data-i18n="pj7.top">Mobile · 50+ Screens
@@ -2447,10 +2499,6 @@
         <span>© 2026 · TANTA_EG · <span data-i18n="footer.nominal">ALL_SYSTEMS_NOMINAL</span></span>
     </footer>
 
-    <!-- SECURITY ALERT BANNER -->
-    <div id="security-alert"><span>🔒 SYSTEM SECURITY ALERT: INSPECT &amp; DEVTOOLS DETECTED, MEDIA PROTECTED</span>
-    </div>
-
     <!-- VIDEO MODAL -->
     <div class="modal" id="vmodal" role="dialog" aria-modal="true" aria-label="Project demo video">
         <div class="modal-box">
@@ -2548,12 +2596,7 @@
             setInterval(tickClock, 1000); tickClock();
 
             /* ── TYPED SUBTITLE ────────────────────────── */
-            var phrases = [
-                'whoami → senior full-stack developer, 8 yrs, 85+ projects',
-                'cat skills.txt → node.js · react · react native · ai agents',
-                'ls clients/ → saudi/ emirati/ french/ egyptian/',
-                'sudo ship --production --no-excuses'
-            ];
+            var phrases = ['whoami → enterprise web, mobile & AI systems'];
             var typedEl = document.getElementById('typed');
             var pi = 0, ci = 0, deleting = false;
             function type() {
@@ -2570,21 +2613,18 @@
                     setTimeout(type, deleting ? 16 : 300);
                 }
             }
-            setTimeout(type, 1600);
+            typedEl.textContent = phrases[0];
 
             /* ── GLITCH NAME (periodic) ────────────────── */
             var glitchables = document.querySelectorAll('.glitchable');
-            setInterval(function () {
-                var el = glitchables[Math.floor(Math.random() * glitchables.length)];
-                el.classList.add('glitch');
-                setTimeout(function () { el.classList.remove('glitch'); }, 260);
-            }, 3400);
-            glitchables.forEach(function (el) {
-                el.addEventListener('mouseenter', function () {
-                    el.classList.add('glitch');
-                    setTimeout(function () { el.classList.remove('glitch'); }, 400);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                glitchables.forEach(function (el) {
+                    el.addEventListener('mouseenter', function () {
+                        el.classList.add('glitch');
+                        setTimeout(function () { el.classList.remove('glitch'); }, 400);
+                    });
                 });
-            });
+            }
 
             /* ── SCROLL: rail thumb + active nav + rail label ── */
             var thumb = document.getElementById('scroll-thumb');
@@ -2608,6 +2648,37 @@
             document.addEventListener('scroll', onScroll, { passive: true });
             onScroll();
 
+            /* ── SCROLL-REACTIVE FLOATING HEADER ─────────── */
+            var headerShell = document.getElementById('status-shell');
+            var headerBar = document.getElementById('statusbar');
+            var compactHeader = false, headerTicking = false, compactTimer = 0;
+            var headerEnter = 88, headerExit = 22, headerDeadZone = 16;
+            function measureHeader() {
+                headerShell.style.height = headerBar.offsetHeight + 'px';
+                var compactWidth = Math.min(1080, window.innerWidth - 32);
+                headerBar.style.setProperty('--compact-width', compactWidth + 'px');
+            }
+            function evaluateHeader() {
+                var y = window.scrollY || document.documentElement.scrollTop;
+                var next = y <= headerDeadZone ? false : compactHeader ? y > headerExit : y > headerEnter;
+                if (next !== compactHeader) {
+                    compactHeader = next;
+                    headerBar.classList.toggle('is-compact', compactHeader);
+                    headerShell.classList.toggle('is-compact', compactHeader);
+                    headerBar.style.overflow = 'hidden';
+                    clearTimeout(compactTimer);
+                    compactTimer = setTimeout(function () { headerBar.style.overflow = ''; }, 580);
+                }
+                headerTicking = false;
+            }
+            function requestHeaderUpdate() {
+                if (!headerTicking) { headerTicking = true; requestAnimationFrame(evaluateHeader); }
+            }
+            measureHeader();
+            window.addEventListener('resize', measureHeader, { passive: true });
+            window.addEventListener('scroll', requestHeaderUpdate, { passive: true });
+            evaluateHeader();
+
             /* ── REVEALS ───────────────────────────────── */
             var obs = new IntersectionObserver(function (es) {
                 es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
@@ -2615,6 +2686,11 @@
             document.querySelectorAll('.rv,.stag').forEach(function (el) { obs.observe(el); });
 
             /* ── COUNTERS ──────────────────────────────── */
+            document.querySelectorAll('.ct img').forEach(function (image) {
+                image.loading = 'eager';
+                image.addEventListener('error', function () { image.parentElement.classList.add('media-failed'); }, { once: true });
+            });
+
             var cObs = new IntersectionObserver(function (es) {
                 es.forEach(function (e) {
                     if (!e.isIntersecting) return;
@@ -2638,9 +2714,11 @@
                 mbtn.classList.toggle('active', open);
                 mbtn.setAttribute('aria-expanded', String(open));
                 mmenu.classList.toggle('open', open);
+                mmenu.setAttribute('aria-hidden', String(!open));
                 document.body.classList.toggle('lock', open);
             }
             mbtn.addEventListener('click', function () { setMenu(!mmenu.classList.contains('open')); });
+            mmenu.setAttribute('aria-hidden', 'true');
             mmenu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
 
             /* ── VIDEO MODAL ───────────────────────────── */
@@ -2658,13 +2736,48 @@
                 ytHolder.appendChild(f);
                 vmodal.classList.add('open');
                 document.body.classList.add('lock');
+                focusModal(vmodal);
             }
             function closeVideo() {
                 vmodal.classList.remove('open');
                 ytHolder.innerHTML = '';
                 document.body.classList.remove('lock');
+                restoreModalFocus();
             }
-            document.querySelectorAll('.pj').forEach(function (c) {
+            var projectCards = Array.prototype.slice.call(document.querySelectorAll('.pj'));
+            var projectFilterButtons = document.querySelectorAll('[data-project-filter]');
+            var projectResults = document.getElementById('project-results');
+            var projectEmpty = document.getElementById('project-empty');
+            var activeProjectFilter = 'all';
+            function updateProjectFilter() {
+                var visibleCount = 0;
+                projectCards.forEach(function (card) {
+                    var visible = activeProjectFilter === 'all' || card.dataset.category === activeProjectFilter;
+                    card.hidden = !visible;
+                    if (visible) visibleCount++;
+                });
+                projectFilterButtons.forEach(function (button) {
+                    button.setAttribute('aria-pressed', String(button.dataset.projectFilter === activeProjectFilter));
+                });
+                projectEmpty.classList.toggle('visible', visibleCount === 0);
+                var labelKey = activeProjectFilter === 'all' ? 'filter.all' : 'filter.' + activeProjectFilter;
+                var label = i18n[labelKey] ? i18n[labelKey][currentLang] : activeProjectFilter;
+                var template = i18n['projects.showing'][currentLang];
+                var statusText = template.replace('{count}', String(visibleCount)).replace('{category}', label);
+                if (currentLang === 'ar') {
+                    statusText = statusText.replace(/([A-Za-z0-9_#+%\.\/-]+)/g, '$1\u200E');
+                    projectResults.innerHTML = '<bdi dir="rtl">' + statusText + '</bdi>';
+                } else {
+                    projectResults.textContent = statusText;
+                }
+            }
+            projectFilterButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    activeProjectFilter = button.dataset.projectFilter;
+                    updateProjectFilter();
+                });
+            });
+            projectCards.forEach(function (c) {
                 c.addEventListener('click', function () { openVideo(c.dataset.yt, c.dataset.name); });
                 c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVideo(c.dataset.yt, c.dataset.name); } });
             });
@@ -2909,6 +3022,7 @@
 
                 imodal.classList.add('open');
                 document.body.classList.add('lock');
+                focusModal(imodal);
             }
 
             function closeImg() {
@@ -2916,6 +3030,7 @@
                 imodal.classList.remove('open');
                 imgContent.innerHTML = '';
                 document.body.classList.remove('lock');
+                restoreModalFocus();
                 currentZoom = 1; panX = 0; panY = 0;
             }
 
@@ -2926,80 +3041,30 @@
             if (imgClose) imgClose.addEventListener('click', closeImg);
             if (imodal) imodal.addEventListener('click', function (e) { if (e.target === imodal) closeImg(); });
 
+            var lastModalTrigger = null;
+            function focusModal(modal) {
+                lastModalTrigger = document.activeElement;
+                var closeButton = modal.querySelector('.modal-x');
+                if (closeButton) closeButton.focus();
+            }
+            function restoreModalFocus() {
+                if (lastModalTrigger && typeof lastModalTrigger.focus === 'function') lastModalTrigger.focus();
+                lastModalTrigger = null;
+            }
+
             document.addEventListener('keydown', function (e) {
                 if (imodal && imodal.classList.contains('open')) {
                     if (e.key === '=' || e.key === '+') { e.preventDefault(); zoomBy(0.15); }
                     if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomBy(-0.15); }
                 }
-                if (e.key === 'Escape') { closeVideo(); closeImg(); setMenu(false); }
-            });
-
-            /* ── LEVEL 2 MEDIA PROTECTION & SECURITY ── */
-            var devtoolsOpen = false;
-            function triggerSecurityAlert(open) {
-                if (devtoolsOpen === open) return;
-                devtoolsOpen = open;
-                document.body.classList.toggle('devtools-detected', open);
-            }
-
-            document.addEventListener('keydown', function (e) {
-                var k = e.key.toUpperCase();
-                var ctrl = e.ctrlKey || e.metaKey;
-                var shift = e.shiftKey;
-
-                if (
-                    e.key === 'F12' ||
-                    (ctrl && shift && (k === 'I' || k === 'J' || k === 'C')) ||
-                    (ctrl && (k === 'U' || k === 'S' || k === 'P'))
-                ) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    triggerSecurityAlert(true);
-                    setTimeout(function () { triggerSecurityAlert(false); }, 3500);
-                    return false;
-                }
-            }, true);
-
-            function checkDevToolsAllTechniques() {
-                var threshold = 180;
-                var widthDiff = (window.outerWidth - window.innerWidth) > threshold;
-                var heightDiff = (window.outerHeight - window.innerHeight) > threshold;
-
-                if (widthDiff || heightDiff) {
-                    triggerSecurityAlert(true);
-                } else {
-                    triggerSecurityAlert(false);
-                }
-            }
-            window.addEventListener('resize', checkDevToolsAllTechniques);
-
-            document.addEventListener('contextmenu', function (e) {
-                var t = e.target;
-                if (t.tagName === 'IMG' || t.tagName === 'VIDEO' || t.tagName === 'IFRAME' || t.closest('.pj-media, .ct-img, #img-modal-viewport, #yt-holder, #imodal, #vmodal')) {
-                    e.preventDefault();
-                    return false;
-                }
-            }, false);
-
-            document.addEventListener('dragstart', function (e) {
-                var t = e.target;
-                if (t.tagName === 'IMG' || t.tagName === 'VIDEO' || t.closest('.pj-media, .ct-img, #img-modal-viewport, #yt-holder, #imodal, #vmodal')) {
-                    e.preventDefault();
-                    return false;
-                }
-            }, false);
-
-            document.addEventListener('copy', function (e) {
-                if (e.target.tagName === 'IMG' || e.target.closest('.pj-media, .ct-img, #img-modal-viewport')) {
-                    e.preventDefault();
+                if (e.key === 'Escape') {
+                    if (vmodal.classList.contains('open')) closeVideo();
+                    else if (imodal && imodal.classList.contains('open')) closeImg();
+                    else setMenu(false);
                 }
             });
 
-            document.querySelectorAll('img, video, iframe').forEach(function (el) {
-                el.setAttribute('draggable', 'false');
-                el.setAttribute('oncontextmenu', 'return false;');
-            });
-
+            /* Public portfolio media remains available to normal browser controls. */
             /* ── TOP BUTTON ────────────────────────────── */
             document.getElementById('top-btn').addEventListener('click', function () {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3023,7 +3088,8 @@
                 'status.loc': { en: 'LOC:', ar: 'الموقع:' },
 
                 'hero.tag': { en: 'Senior Full-Stack Developer · Co-Founder @ DeltaDev', ar: 'مطوّر Full-Stack محترف · شريك مؤسس في DeltaDev' },
-                'hero.k.shipped': { en: 'Projects_Shipped', ar: 'مشاريع_منجزة' },
+                'hero.summary': { en: 'I build enterprise web and mobile products, AI-assisted tools, and operational systems that teams rely on every day.', ar: 'أبني منتجات ويب وموبايل للمؤسسات، وأدوات مدعومة بالذكاء الاصطناعي، وأنظمة تشغيلية تعتمد عليها الفرق يومياً.' },
+                'hero.k.shipped': { en: 'Projects_Shipped', ar: 'مشاريع_م������جزة' },
                 'hero.k.years': { en: 'Years_Active', ar: 'سنوات_الخبرة' },
                 'hero.k.screens': { en: 'Max_Screens', ar: 'أقصى_عدد_شاشات' },
                 'hero.k.certs': { en: 'Certs_Verified', ar: 'شهادات_موثّقة' },
@@ -3056,17 +3122,25 @@
                 'xp3.org': { en: 'Company / Freelance, Egypt & Remote', ar: 'شركة / عمل حر, مصر وعن بُعد' },
                 'xp3.desc': { en: 'Developed and deployed secure full-stack web and mobile apps with Node.js, React, React Native, and Expo. Integrated AI agents and OpenAI-powered chatbots into client platforms. Built VS Code and Chrome extensions. Managed cloud infrastructure and security.', ar: 'تطوير ونشر تطبيقات ويب وموبايل متكاملة (Full-Stack) وآمنة باستخدام تقنيات Node.js وReact وReact Native وExpo. دمج وكلاء الذكاء الاصطناعي وأنظمة المحادثة المدعومة بـ OpenAI داخل منصات العملاء. بالإضافة إلى تطوير إضافات (Extensions) لمتصفح Chrome ومحرر VS Code, وإدارة البنية التحتية السحابية وحمايتها.' },
                 'xp4.role': { en: 'Mid-level Full-Stack Developer', ar: 'مطوّر Full-Stack متوسط الخبرة' },
-                'xp4.org': { en: 'Company / Freelance, Egypt', ar: 'شركة / عمل حر, مصر' },
-                'xp4.desc': { en: 'Built and maintained full-stack applications with JavaScript and Node.js. Expanded into mobile development with React Native and Expo. Worked with PostgreSQL, MySQL, and MongoDB.', ar: 'بناء وصيانة تطبيقات Full-Stack باستخدام JavaScript وNode.js. التوسع في مجال تطوير تطبيقات الموبايل بالاعتماد على تقنيتي React Native وExpo, واكتساب خبرة عملية في التعامل مع قواعد البيانات مثل PostgreSQL وMySQL وMongoDB.' },
+                'xp4.org': { en: 'Company / Freelance, Egypt', ar: 'شركة / عمل حر, مص��' },
+                'xp4.desc': { en: 'Built and maintained full-stack applications with JavaScript and Node.js. Expanded into mobile development with React Native and Expo. Worked with PostgreSQL, MySQL, and MongoDB.', ar: 'بن��ء وصيانة تطبيقات Full-Stack باستخدام JavaScript وNode.js. التوسع في مجال تطوير تطبيقات الموبايل بالاعتماد على تقنيتي React Native وExpo, واكتساب خبرة عملية في التعامل مع قواعد البيانات مثل PostgreSQL وMySQL وMongoDB.' },
                 'xp5.role': { en: 'Junior Developer', ar: 'مطوّر مبتدئ' },
                 'xp5.org': { en: 'Self-directed & Freelance, Egypt', ar: 'تعلّم ذاتي وعمل حر, مصر' },
                 'xp5.desc': { en: 'Started career building web applications. Gained foundational experience in JavaScript, Node.js, and database management. The beginning of 85+ projects and counting.', ar: 'بداية المسيرة المهنية في تطوير تطبيقات الويب, واكتساب الخبرات الأساسية في تقنيات JavaScript وNode.js وإدارة قواعد البيانات. كانت هذه الانطلاقة لأكثر من 85 مشروعاً حتى الآن, والعدد في ازدياد.' },
 
                 'sec.projects': { en: 'EXEC_HISTORY, SELECTED PROJECTS', ar: 'سجل_التنفيذ, مشاريع مختارة' },
+                'projects.intro': { en: 'A small selection of systems built for teams, operators, and people on the move.', ar: 'مجموعة مختارة من الأنظمة المصممة للفرق والمشغلين والمستخدمين أثناء التنقل.' },
+                'projects.filters': { en: 'Filter projects', ar: 'تصفية المشاريع' },
+                'projects.showing': { en: 'Showing {count} projects · {category}', ar: 'عرض {count} مشاريع · {category}' },
+                'projects.empty': { en: 'No projects in this category yet.', ar: 'لا توجد مشاريع في هذا التصنيف حالياً.' },
+                'filter.all': { en: 'All', ar: 'الكل' },
+                'filter.ai': { en: 'AI & tools', ar: 'الذكاء الاصطناعي والأدوات' },
+                'filter.enterprise': { en: 'Enterprise', ar: 'المؤسسات' },
+                'filter.mobile': { en: 'Mobile', ar: 'الموبايل' },
                 'pj1.top': { en: 'SaaS · AI Agent', ar: 'SaaS · وكيل ذكاء اصطناعي' },
                 'pj1.desc': { en: 'AI agent that loads GitHub repositories and edits them agentically, with a built-in IDE and Terminal.', ar: 'وكيل ذكاء اصطناعي يقوم بتحميل مستودعات GitHub وتعديلها بشكل مستقل (Agentic), مزود ببيئة تطوير متكاملة (IDE) ومحطة أوامر (Terminal).' },
                 'pj2.top': { en: 'Internal Tool · VS Code', ar: 'أداة داخلية · VS Code' },
-                'pj2.desc': { en: 'AI Agent for VS Code that edits any project loaded in the editor or creates new projects from scratch.', ar: 'وكيل ذكاء اصطناعي مخصص لمحرر VS Code, قادر على تعديل أي مشروع مفتوح أو إنشاء مشاريع جديدة بالكامل من الصفر.' },
+                'pj2.desc': { en: 'AI Agent for VS Code that edits any project loaded in the editor or creates new projects from scratch.', ar: 'وكيل ذكاء اصطناعي مخصص لمحرر VS Code, قادر على تعد��ل أي مشروع مفتوح أو إنشاء مشاريع جديدة بالكامل من الصفر.' },
                 'pj3.top': { en: 'Web App · Saudi Client', ar: 'تطبيق ويب · عميل سعودي' },
                 'pj3.desc': { en: 'Interactive spiritual guide for Hajj and Umrah pilgrims with lap counters, maps, and an AI assistant.', ar: 'دليل تفاعلي متكامل لحجاج ومعتمري بيت الله الحرام, يتضمن عدّادات لأشواط الطواف والسعي, خرائط تفاعلية, ومساعداً ذكياً.' },
                 'pj4.top': { en: 'Desktop · 136 Screens · Saudi Client', ar: 'تطبيق سطح مكتب · ١٣٦ شاشة · عميل سعودي' },
@@ -3074,7 +3148,7 @@
                 'pj5.top': { en: 'Web App · Emirati Client', ar: 'تطبيق ويب · عميل إماراتي' },
                 'pj5.desc': { en: 'Modern project management system with task tracking, team collaboration, and reporting dashboards.', ar: 'نظام عصري لإدارة المشاريع, يتضمن أدوات لتتبع المهام, تعزيز التعاون بين فرق العمل, ولوحات تحكم لعرض التقارير المتقدمة.' },
                 'pj6.top': { en: 'Web App · French Client', ar: 'تطبيق ويب · عميل فرنسي' },
-                'pj6.desc': { en: 'Modern broker system for medical equipment, built serverless with React and Supabase.', ar: 'نظام حديث للوساطة التجارية في مجال المعدات الطبية, مبني بتقنية Serverless باستخدام React وSupabase.' },
+                'pj6.desc': { en: 'Modern broker system for medical equipment, built serverless with React and Supabase.', ar: 'نظام حديث للوساطة التجارية في مجال ا��معدات الطبية, مبني بتقنية Serverless باستخدام React وSupabase.' },
                 'pj7.top': { en: 'Mobile · 50+ Screens · Egyptian Client', ar: 'تطبيق موبايل · أكثر من ٥٠ شاشة · عميل مصري' },
                 'pj7.desc': { en: 'Comprehensive logistics and freight management platform with real-time tracking via Socket.IO.', ar: 'منصة شاملة لإدارة العمليات اللوجستية والشحن, تتميز بميزة التتبع اللحظي باستخدام تقنية Socket.IO.' },
 
@@ -3132,7 +3206,7 @@
                 'CONTACT': { en: 'CONTACT', ar: 'التواصل' }
             };
 
-            var htmlKeys = { 'sk.p1': 1, 'sk.p2': 1, 'sk.buildingval': 1, 'contact.big': 1 };
+            var htmlKeys = { 'sk.p1': 1, 'sk.p2': 1, 'sk.buildingval': 1, 'contact.big': 1, 'projects.showing': 1 };
 
             var currentLang = 'en';
             try {
@@ -3182,6 +3256,9 @@
                 document.querySelectorAll('#lang-toggle button, #mmenu-lang button').forEach(function (btn) {
                     btn.classList.toggle('active', btn.dataset.lang === lang);
                 });
+                var filterGroup = document.querySelector('.project-filter');
+                if (filterGroup && i18n['projects.filters']) filterGroup.setAttribute('aria-label', i18n['projects.filters'][lang]);
+                if (typeof updateProjectFilter === 'function' && projectFilterButtons) updateProjectFilter();
             }
 
             window.i18nRailLabel = function (key) {
@@ -3195,6 +3272,7 @@
             if (currentLang === 'ar') {
                 applyLang('ar');
             }
+            updateProjectFilter();
 
             /* ── JUICE EFFECT (FLUID LIQUID PARTICLE SYSTEM) ── */
             function createJuiceEffect(container, options) {
@@ -3574,7 +3652,7 @@
             }
 
             var mohsenTextEl = document.getElementById('mohsen-text');
-            var mohsenJuiceEl = document.getElementById('juice-mohsen');
+            var mohsenJuiceEl = null;
             if (mohsenTextEl && mohsenJuiceEl) {
                 var juiceInstance = null;
                 var resizeTimer = null;
